@@ -1,6 +1,12 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import querystring from "node:querystring";
+import { VercelKV as Redis } from "@vercel/kv";
+
+const redis = new Redis({
+  url: import.meta.env.KV_REST_API_URL,
+  token: import.meta.env.KV_REST_API_TOKEN,
+});
 
 const clientId = import.meta.env.SPOTIFY_CLIENT_ID;
 const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET;
@@ -68,6 +74,8 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
 
   const data = await response.json();
 
+  console.log(data.item.artists);
+
   const spotifySchema = z.object({
     item: z.object({
       album: z.object({
@@ -84,7 +92,9 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
       artists: z
         .object({
           name: z.string(),
-          href: z.string(),
+          external_urls: z.object({
+            spotify: z.string(),
+          }),
         })
         .array(),
     }),
@@ -106,12 +116,28 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
     href: parsedData.item.external_urls.spotify,
     name: parsedData.item.name,
     thumbnailUrl: parsedData.item.album.images[1].url,
-    artists: parsedData.item.artists,
+    artists: parsedData.item.artists.map((artist) => ({
+      name: artist.name,
+      href: artist.external_urls.spotify,
+    })),
   };
 };
 
-export const get: APIRoute = async ({ params, request }) => {
+export const get: APIRoute = async () => {
+  const spotifyCache = await redis.get("spotify").catch((err) => {
+    console.error(err);
+  });
+  if (spotifyCache) {
+    console.log("returned cache");
+    return {
+      body: JSON.stringify(spotifyCache),
+    };
+  }
+
   const spotifyStatus = await getSpotifyStatus();
+  await redis.setex("spotify", 60, spotifyStatus).catch((err) => {
+    console.error(err);
+  });
 
   return {
     body: JSON.stringify(spotifyStatus),
