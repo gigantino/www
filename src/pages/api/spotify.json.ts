@@ -32,7 +32,7 @@ const getAccessToken = async () => {
   return response.json();
 };
 
-type SpotifyResponse =
+export type SpotifyResponse =
   | {
       isListening: true;
       href: string;
@@ -73,8 +73,6 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
   }
 
   const data = await response.json();
-
-  console.log(data.item.artists);
 
   const spotifySchema = z.object({
     item: z.object({
@@ -128,14 +126,13 @@ export const get: APIRoute = async () => {
     console.error(err);
   });
   if (spotifyCache) {
-    console.log("returned cache");
     return {
       body: JSON.stringify(spotifyCache),
     };
   }
 
   const spotifyStatus = await getSpotifyStatus();
-  await redis.setex("spotify", 60, spotifyStatus).catch((err) => {
+  await redis.setex("spotify", 30, spotifyStatus).catch((err) => {
     console.error(err);
   });
 
