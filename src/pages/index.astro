@@ -1,1 +1,35 @@
-<h1>Hello, world!</h1>
+---
+import Post from "@components/Post.astro";
+import Navigation from "@components/Navigation.astro";
+import Layout from "@layouts/Layout.astro";
+
+const posts = [
+  {
+    href: "/blog/1",
+    title: "Blog post 1",
+    description: "Blog description!!!",
+  },
+  {
+    href: "/blog/2",
+    title: "Blog post 2",
+    description: "Another description!!!",
+  },
+];
+---
+
+<Layout title="home@gigantino.dev" />
+
+<!--
+<main class="w-full h-screen flex items-center justify-center px-2">
+  <div
+    class="w-full max-w-screen-sm bg-orange-500 flex flex-col gap-2 p-4 rounded-lg"
+  >
+<div>
+  This is like the best description t do something that is great and honestly I
+  feel great.
+</div>
+
+<h1 class="text-2xl">Posts</h1>
+<div class="flex flex-col gap-2">
+  {posts.map((post) => <Post {...post} />)}
+</div>-->

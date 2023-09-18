@@ -1,0 +1,22 @@
+---
+import type { SpotifyResponse } from "@pages/api/spotify.json";
+
+const rawResponse = await fetch("http://localhost:3000/api/spotify.json");
+
+const response: SpotifyResponse = await rawResponse.json();
+---
+
+{
+  response.isListening ? (
+    <div class="w-fit px-2 py-1 bg-green-500 flex flex-col">
+      <div>
+        Listening to
+        <a class="font-bold hover:underline" href={response.href}>
+          {response.name}
+        </a>
+      </div>
+    </div>
+  ) : (
+    <div>Not listening to anything</div>
+  )
+}
