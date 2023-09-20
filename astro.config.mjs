@@ -4,8 +4,8 @@ import mdx from "@astrojs/mdx";
 import vercel from "@astrojs/vercel/serverless";
 
 export default defineConfig({
-  experimental: {
-    assets: true,
+  server: {
+    port: 3000,
   },
   integrations: [tailwind(), mdx()],
   output: "server",
