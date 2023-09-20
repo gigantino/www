@@ -1,0 +1,11 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+const allPosts = await Astro.glob("./blog/*.mdx");
+---
+
+<Layout title="home@gigantino.dev">
+  <div class="flex flex-col">
+    {allPosts.map((post) => <a href={post.url}>{post.frontmatter.title}</a>)}
+  </div>
+</Layout>

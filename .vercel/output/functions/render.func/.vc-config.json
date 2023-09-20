@@ -1,0 +1,5 @@
+{
+	"runtime": "nodejs18.x",
+	"handler": "newPortfolio/blog/dist/entry.mjs",
+	"launcherType": "Nodejs"
+}
