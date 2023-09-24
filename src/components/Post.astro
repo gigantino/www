@@ -1,4 +1,6 @@
 ---
+import externalUrlIconRef from "@icons/external-url.svg";
+
 interface Props {
   href?: string;
   title?: string;
@@ -9,7 +11,7 @@ const { title, description, href } = Astro.props;
 ---
 
 <a
-  class="w-full bg-zinc-50 text-gray-900 dark:bg-zinc-800 rounded border dark:border-zinc-700 dark:text-white px-3 py-4"
+  class="w-full bg-zinc-50 text-gray-900 dark:bg-zinc-800 rounded border dark:border-zinc-700 dark:text-white px-3 py-4 flex justify-between"
   href={href}
 >
   <div class="flex flex-col">
@@ -20,4 +22,26 @@ const { title, description, href } = Astro.props;
       {description}
     </p>
   </div>
+  <img
+    src={externalUrlIconRef.src}
+    alt="External Link"
+    width="20px"
+    height="20px"
+    class="ml-4 icon-color"
+  />
 </a>
+
+<style scoped>
+  @media (prefers-color-scheme: dark) {
+    .icon-color {
+      filter: invert(100%) sepia(1%) saturate(3824%) hue-rotate(155deg)
+        brightness(124%) contrast(100%);
+    }
+  }
+  @media (prefers-color-scheme: light) {
+    .icon-color {
+      filter: invert(2%) sepia(3%) saturate(4938%) hue-rotate(201deg)
+        brightness(86%) contrast(84%);
+    }
+  }
+</style>

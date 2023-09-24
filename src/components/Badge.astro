@@ -1,0 +1,23 @@
+---
+import spotifyIconRef from "@icons/spotify.svg";
+
+interface Props {
+  type: "spotify";
+}
+
+const { type } = Astro.props;
+
+let icon = "";
+switch (type) {
+  case "spotify":
+    icon = spotifyIconRef.src;
+    break;
+}
+---
+
+<span
+  class="border gap-1 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 rounded p-1 text-sm inline-flex items-center leading-4 text-neutral-900 dark:text-zinc-100 no-underline"
+>
+  <img src={icon} alt={type} class="not-prose" width="14px" height="14px" />
+  <span class="capitalize">{type}</span>
+</span>
