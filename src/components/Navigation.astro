@@ -1,8 +1,8 @@
 ---
-import twitterBlueIconRef from "../icons/twitter-blue.svg";
+import twitterBlueIconRef from "@icons/twitter-blue.svg";
 ---
 
-<nav class="w-full max-w-[65ch] m-auto py-4 text-gray-700 dark:text-white/80">
+<nav class="w-full max-w-prose m-auto py-4 text-gray-700 dark:text-white/80">
   <div class="w-full flex justify-between items-center">
     <div class="flex gap-1 flex-col">
       <a href="/">
@@ -13,7 +13,12 @@ import twitterBlueIconRef from "../icons/twitter-blue.svg";
         </h1>
       </a>
       <div class="flex gap-1">
-        <img src={twitterBlueIconRef.src} alt="Twitter Blue (X?)" class="w-5" />
+        <img
+          src={twitterBlueIconRef.src}
+          alt="Twitter Blue (X?)"
+          width="20px"
+          height="20px"
+        />
         <div>Verified (I paid $12 for this domain)</div>
       </div>
     </div>

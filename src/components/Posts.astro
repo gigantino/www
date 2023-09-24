@@ -1,0 +1,18 @@
+---
+import Post from "./Post.astro";
+const allPosts = await Astro.glob("../pages/blog/*.mdx");
+---
+
+<div class="not-prose">
+  <div class="flex flex-col gap-2">
+    {
+      allPosts.map((post) => (
+        <Post
+          href={post.url}
+          title={post.frontmatter.title}
+          description={post.frontmatter.description}
+        />
+      ))
+    }
+  </div>
+</div>
