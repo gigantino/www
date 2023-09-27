@@ -1,9 +1,5 @@
 ---
-import spotifyIconRef from "@icons/spotify.svg";
-import obsidianIconRef from "@icons/obsidian.svg";
-import neovimIconRef from "@icons/neovim.svg";
-import nuxtIconRef from "@icons/nuxt.svg";
-import typescriptIconRef from "@icons/typescript.svg";
+import { Icon } from "astro-icon";
 
 interface Props {
   type: "spotify" | "obsidian" | "neovim" | "nuxt" | "typescript";
@@ -11,31 +7,13 @@ interface Props {
 }
 
 const { type, href } = Astro.props;
-
-let icon = "";
-switch (type) {
-  case "spotify":
-    icon = spotifyIconRef.src;
-    break;
-  case "obsidian":
-    icon = obsidianIconRef.src;
-    break;
-  case "neovim":
-    icon = neovimIconRef.src;
-    break;
-  case "nuxt":
-    icon = nuxtIconRef.src;
-    break;
-  case "typescript":
-    icon = typescriptIconRef.src;
-    break;
-}
 ---
 
 <a
   class="inline-flex items-center gap-1 rounded border border-zinc-200 bg-zinc-50 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
   href={href}
 >
-  <img src={icon} alt={type} class="not-prose w-3" width="13px" height="13px" />
+  <Icon name={type} class="h-3 w-3" />
+  <!-- <img src={icon} alt={type} class="not-prose w-3" width="13px" height="13px" /> -->
   <span class="capitalize">{type}</span>
 </a>

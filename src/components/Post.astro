@@ -1,6 +1,4 @@
 ---
-import externalUrlIconRef from "@icons/external-url.svg";
-
 interface Props {
   href?: string;
   title?: string;
@@ -22,25 +20,4 @@ const { title, description, href } = Astro.props;
       {description}
     </p>
   </div>
-  <img
-    src={externalUrlIconRef.src}
-    alt="External Link"
-    width="20px"
-    height="20px"
-    class="icon-color ml-4"
-  />
 </a>
-
-<style scoped>
-  @media (prefers-color-scheme: dark) {
-    .icon-color {
-      filter: invert(100%) sepia(1%) saturate(3824%) hue-rotate(155deg) brightness(124%)
-        contrast(100%);
-    }
-  }
-  @media (prefers-color-scheme: light) {
-    .icon-color {
-      filter: invert(2%) sepia(3%) saturate(4938%) hue-rotate(201deg) brightness(86%) contrast(84%);
-    }
-  }
-</style>
