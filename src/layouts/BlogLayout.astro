@@ -9,10 +9,10 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
 <html lang="en" transition:animate="none">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
+    <meta property="og:site_name" content="gigantino.dev" />
     <meta property="og:url" content="https://gigantino.dev/" />
     <meta property="og:title" content={title} />
-    <meta property="og:site_name" content="gigantino.dev" />
+    <meta property="og:description" content={description} />
     <meta property="og:locale" content="en_US" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
