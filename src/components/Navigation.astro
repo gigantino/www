@@ -1,5 +1,5 @@
 ---
-import twitterBlueIconRef from "@icons/twitter-blue.svg";
+import { Icon } from "astro-icon";
 ---
 
 <nav class="m-auto w-full max-w-prose py-4 text-zinc-700 dark:text-white/80">
@@ -12,8 +12,8 @@ import twitterBlueIconRef from "@icons/twitter-blue.svg";
           >
         </h1>
       </a>
-      <div class="flex gap-1">
-        <img src={twitterBlueIconRef.src} alt="Twitter Blue (X?)" width="20px" height="20px" />
+      <div class="flex items-center gap-1">
+        <Icon name="twitter-blue" class="h-5 w-5" />
         <div>Verified (I paid $12 for this domain)</div>
       </div>
     </div>
