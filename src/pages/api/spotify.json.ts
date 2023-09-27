@@ -12,9 +12,7 @@ const clientId = import.meta.env.SPOTIFY_CLIENT_ID;
 const clientSecret = import.meta.env.SPOTIFY_CLIENT_SECRET;
 const refreshToken = import.meta.env.SPOTIFY_REFRESH_TOKEN;
 
-const basicToken = Buffer.from(`${clientId}:${clientSecret}`).toString(
-  "base64"
-);
+const basicToken = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
 const getAccessToken = async () => {
   const response = await fetch("https://accounts.spotify.com/api/token", {
@@ -34,37 +32,32 @@ const getAccessToken = async () => {
 
 export type SpotifyResponse =
   | {
-      isListening: true;
-      href: string;
+    isListening: true;
+    href: string;
+    name: string;
+    thumbnailUrl: string;
+    artists: {
       name: string;
-      thumbnailUrl: string;
-      artists: {
-        name: string;
-        href: string;
-      }[];
-    }
+      href: string;
+    }[];
+  }
   | {
-      isListening: false;
-    };
+    isListening: false;
+  };
 
 export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
   let errored = false;
-  const { access_token: accessToken } = await getAccessToken().catch(
-    () => (errored = true)
-  );
+  const { access_token: accessToken } = await getAccessToken().catch(() => (errored = true));
   if (errored) {
     return { isListening: false };
   }
 
-  const response = await fetch(
-    "https://api.spotify.com/v1/me/player/currently-playing",
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+  const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 
   if (!response.ok || response.status == 204) {
     return {

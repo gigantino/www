@@ -24,10 +24,7 @@ const { title } = Astro.props;
   <body class="dark:bg-zinc-900 dark:text-white">
     <div class="px-4">
       <Navigation />
-      <main
-        class="prose prose-zinc m-auto dark:prose-invert"
-        transition:animate="slide"
-      >
+      <main class="prose prose-zinc m-auto dark:prose-invert" transition:animate="slide">
         <slot />
       </main>
     </div>

@@ -8,7 +8,7 @@ const response: SpotifyResponse = await rawResponse.json();
 
 {
   response.isListening ? (
-    <div class="w-fit px-2 py-1 bg-green-500 flex flex-col">
+    <div class="flex w-fit flex-col bg-green-500 px-2 py-1">
       <div>
         Listening to
         <a class="font-bold hover:underline" href={response.href}>

@@ -6,7 +6,7 @@ import nuxtIconRef from "@icons/nuxt.svg";
 import typescriptIconRef from "@icons/typescript.svg";
 
 interface Props {
-  type: "spotify" | "obsidian" | "neovim";
+  type: "spotify" | "obsidian" | "neovim" | "nuxt" | "typescript";
   href: string;
 }
 
@@ -33,7 +33,7 @@ switch (type) {
 ---
 
 <a
-  class="border gap-1 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 rounded p-1 text-sm inline-flex items-center leading-4 text-neutral-900 dark:text-zinc-100 no-underline"
+  class="inline-flex items-center gap-1 rounded border border-zinc-200 bg-zinc-50 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
   href={href}
 >
   <img src={icon} alt={type} class="not-prose w-3" width="13px" height="13px" />
