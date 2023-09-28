@@ -1,1 +1,34 @@
-<div>LINKS</div>
+---
+import { Icon } from "astro-icon";
+
+type Link = {
+  href: string;
+  label: string;
+};
+
+const links: Link[] = [
+  {
+    href: "https://github.com/gigantino",
+    label: "github",
+  },
+  {
+    href: "https://matrix.to/#/@gigantino:matrix.org",
+    label: "matrix",
+  },
+  {
+    href: "mailto:hello@gigantino.dev",
+    label: "e-mail",
+  },
+];
+---
+
+<div class="not-prose flex gap-3">
+  {
+    links.map((link) => (
+      <a href={link.href} class="group flex items-center gap-1">
+        <Icon name="external-link" class="h-5 w-5" />
+        <span class="font-bold group-hover:underline">{link.label}</span>
+      </a>
+    ))
+  }
+</div>

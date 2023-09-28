@@ -2,18 +2,33 @@
 import { Icon } from "astro-icon";
 
 interface Props {
-  type: "spotify" | "obsidian" | "neovim" | "nuxt" | "typescript";
+  type:
+    | "astro-light"
+    | "astro-dark"
+    | "neovim"
+    | "nuxt"
+    | "obsidian"
+    | "spotify"
+    | "tailwindcss"
+    | "typescript";
   href: string;
+  label?: string;
+  hideWhen?: "dark" | "light";
 }
 
-const { type, href } = Astro.props;
+const { type, href, label, hideWhen } = Astro.props;
 ---
 
 <a
-  class="inline-flex items-center gap-1 rounded border border-zinc-200 bg-zinc-50 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+  class={`items-center gap-1 rounded border border-zinc-200 bg-zinc-50 p-1 text-sm leading-4 text-neutral-900 no-underline dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 ${
+    hideWhen === "dark"
+      ? "dark:hidden inline-flex "
+      : hideWhen == "light"
+      ? "hidden dark:inline-flex"
+      : "inline-flex"
+  }`}
   href={href}
 >
   <Icon name={type} class="h-3 w-3" />
-  <!-- <img src={icon} alt={type} class="not-prose w-3" width="13px" height="13px" /> -->
-  <span class="capitalize">{type}</span>
+  <span class="capitalize">{label ? label : type}</span>
 </a>
