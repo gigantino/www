@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon";
 interface Props {
   href?: string;
   title?: string;
@@ -9,11 +10,12 @@ const { title, description, href } = Astro.props;
 ---
 
 <a
-  class="flex w-full justify-between rounded border bg-zinc-50 px-3 py-4 text-gray-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+  class="group flex w-full justify-between rounded border bg-zinc-50 px-3 py-4 text-gray-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
   href={href}
 >
   <div class="flex flex-col">
-    <p class="font-bold">
+    <p class="flex items-center gap-1 font-bold group-hover:underline">
+      <Icon name="external-link" class="w-5" />
       {title}
     </p>
     <p class="text-zinc-600 dark:text-zinc-300">

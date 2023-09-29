@@ -21,10 +21,10 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
     <title>{title}</title>
     <ViewTransitions fallback="swap" />
   </head>
-  <body class="dark:bg-zinc-900 dark:text-white">
-    <div class="px-4 py-8">
-      <Navigation />
+  <body class="bg-zinc-100 dark:bg-zinc-900 dark:text-white">
+    <div class="px-4 md:py-14">
       <main class="prose prose-zinc m-auto dark:prose-invert" transition:animate="slide">
+        <Navigation />
         <slot />
       </main>
     </div>

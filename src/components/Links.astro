@@ -25,9 +25,9 @@ const links: Link[] = [
 <div class="not-prose flex gap-3">
   {
     links.map((link) => (
-      <a href={link.href} class="group flex items-center gap-1">
+      <a href={link.href} class="flex items-center gap-1 hover:underline">
         <Icon name="external-link" class="h-5 w-5" />
-        <span class="font-bold group-hover:underline">{link.label}</span>
+        <span class="font-bold">{link.label}</span>
       </a>
     ))
   }
