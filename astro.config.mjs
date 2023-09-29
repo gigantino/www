@@ -4,13 +4,22 @@ import mdx from "@astrojs/mdx";
 import vercel from "@astrojs/vercel/serverless";
 import sitemap from "@astrojs/sitemap";
 
+import partytown from "@astrojs/partytown";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://gigantino.dev",
   server: {
-    port: 3000,
+    port: 3000
   },
-  integrations: [tailwind(), mdx(), sitemap()],
+  integrations: [tailwind(), mdx(), sitemap(), partytown()],
   output: "server",
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true
+    },
+    speedInsights: {
+      enabled: true
+    }
+  })
 });
