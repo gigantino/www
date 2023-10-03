@@ -7,7 +7,9 @@ description: "Hello, world!"
 import Badge from "@components/Badge.astro";
 import Links from "@components/Links.astro";
 import Posts from "@components/Posts.astro";
-import Spotify from "@components/Spotify.astro";
+import Spotify from "@components/Spotify.svelte";
+import PrettyGoodPrivacy from "@components/PrettyGoodPrivacy.svelte";
+
 
 # hello world! 👋
 
@@ -37,6 +39,14 @@ Have a read!
 
 (Pssst! I also have an <Badge label="RSS" type="rss" href="/rss.xml"  /> feed!)
 
+
+I like listening to <Badge type="spotify" href="https://spotify.com" />
+<Spotify client:load />
+
+
+Also, I have a PGP key!
+
+<PrettyGoodPrivacy client:load />
 ---
 
 This website was built with <Badge label="Astro" type="astro" href="https://astro.build/"  />
