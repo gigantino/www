@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
-import vercel from "@astrojs/vercel/edge";
+import vercel from "@astrojs/vercel/serverless";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
@@ -15,6 +15,7 @@ export default defineConfig({
   integrations: [tailwind(), mdx(), sitemap(), partytown(), svelte()],
   output: "server",
   adapter: vercel({
+    edgeMiddleware: true,
     webAnalytics: {
       enabled: true,
     },
