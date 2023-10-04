@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
 
   let data: SpotifyResponse | undefined = undefined;
+  let isLoading = true;
   onMount(async () => {
     const rawResponse = await fetch("/api/spotify.json");
     data = await rawResponse.json();
@@ -12,7 +13,12 @@
 
 <div class="not-prose">
   <div class="relative w-full">
-    {#if !data}
+    {#if isLoading}
+      <!-- Hide the content behind (to avoid a thumbnail that didn't load to show) -->
+      <div
+        transition:fade={{ delay: 0, duration: 250 }}
+        class="absolute h-full w-full rounded border bg-zinc-900 dark:border-zinc-700"
+      ></div>
       <!-- Pulse animation on loading -->
       <div
         transition:fade={{ delay: 0, duration: 250 }}
@@ -31,6 +37,7 @@
                 class="aspect-square w-full flex-grow-0 rounded-md"
                 width="56"
                 height="56"
+                on:load={() => (isLoading = false)}
                 alt={data.name}
               />
             </div>
@@ -38,7 +45,7 @@
               <a class="w-fit truncate font-bold hover:underline" href={data.href}>
                 {data.name}
               </a>
-              <a href={data.artists[0].href} class="w-fit text-xs hover:underline">
+              <a href={data.artists[0].href} class="w-fit hover:underline">
                 {data.artists[0].name}
               </a>
             </div>
