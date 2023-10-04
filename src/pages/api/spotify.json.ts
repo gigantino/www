@@ -32,24 +32,36 @@ const getAccessToken = async () => {
 
 export type SpotifyResponse =
   | {
-    isListening: true;
-    href: string;
-    name: string;
-    thumbnailUrl: string;
-    artists: {
-      name: string;
+      isListening: true | false;
       href: string;
-    }[];
-  }
+      name: string;
+      thumbnailUrl: string;
+      artists: {
+        name: string;
+        href: string;
+      }[];
+    }
   | {
-    isListening: false;
-  };
+      isListening: false;
+      name: null;
+    };
+
+const getLastSong = async (): Promise<SpotifyResponse> => {
+  const lastSpotifySong = (await redis.get("last-spotify-song").catch((err) => {
+    console.error(err);
+  })) as SpotifyResponse;
+
+  if (lastSpotifySong) {
+    return { ...lastSpotifySong, isListening: false };
+  }
+  return { isListening: false, name: null };
+};
 
 export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
   let errored = false;
   const { access_token: accessToken } = await getAccessToken().catch(() => (errored = true));
   if (errored) {
-    return { isListening: false };
+    return getLastSong();
   }
 
   const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
@@ -60,9 +72,7 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
   });
 
   if (!response.ok || response.status == 204) {
-    return {
-      isListening: false,
-    };
+    return getLastSong();
   }
 
   const data = await response.json();
@@ -95,14 +105,12 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
 
   const dataValidation = spotifySchema.safeParse(data);
   if (!dataValidation.success) {
-    return {
-      isListening: false,
-    };
+    return getLastSong();
   }
 
   const { data: parsedData } = dataValidation;
 
-  return {
+  const spotifyStatus = {
     isListening: true,
     href: parsedData.item.external_urls.spotify,
     name: parsedData.item.name,
@@ -112,10 +120,16 @@ export const getSpotifyStatus = async (): Promise<SpotifyResponse> => {
       href: artist.external_urls.spotify,
     })),
   };
+
+  await redis.set("last-spotify-song", spotifyStatus).catch((err) => {
+    console.error(err);
+  });
+
+  return spotifyStatus;
 };
 
 export const get: APIRoute = async () => {
-  const spotifyCache = await redis.get("spotify").catch((err) => {
+  const spotifyCache = await redis.get("spotify-cache").catch((err) => {
     console.error(err);
   });
   if (spotifyCache) {
@@ -125,7 +139,7 @@ export const get: APIRoute = async () => {
   }
 
   const spotifyStatus = await getSpotifyStatus();
-  await redis.setex("spotify", 30, spotifyStatus).catch((err) => {
+  await redis.setex("spotify-cache", 30, spotifyStatus).catch((err) => {
     console.error(err);
   });
 

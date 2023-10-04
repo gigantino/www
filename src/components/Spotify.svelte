@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
   import type { SpotifyResponse } from "@pages/api/spotify.json";
   import { onMount } from "svelte";
 
@@ -10,29 +11,57 @@
 </script>
 
 <div class="not-prose">
-  <div>
-    {#if data && data.isListening}
-      <div class="flex items-center justify-between rounded bg-green-500 p-3 text-black">
-        <div class="flex gap-3">
-          <div class="aspect-square w-14">
-            <img src={data.thumbnailUrl} class="rounded" width="56" height="56" alt={data.name} />
-          </div>
-          <div class=" flex flex-col justify-center">
-            <a class="font-bold hover:underline" href={data.href}>{data.name}</a>
-            <div>
-              {#each data.artists as artist, i}
-                <a href={artist.href} class="hover:underline">{artist.name}</a>
-                {#if i + 1 != data.artists.length}<span>, </span>{/if}
-              {/each}
+  <div class="relative w-full">
+    {#if !data}
+      <!-- Pulse animation on loading -->
+      <div
+        transition:fade={{ delay: 0, duration: 250 }}
+        class="animate-pulse-fast absolute h-full w-full rounded border border-zinc-700"
+      >
+        <div class="h-full w-full rounded bg-zinc-950" />
+      </div>
+    {/if}
+    <div class="rounded border border-zinc-700 p-3">
+      <div class="h-14">
+        {#if data && data.name}
+          <div class="flex h-full w-full gap-4">
+            <div class="w-14 flex-shrink-0 rounded-md">
+              <img
+                src={data.thumbnailUrl}
+                class="aspect-square w-full flex-grow-0 rounded-md"
+                width="56"
+                height="56"
+                alt={data.name}
+              />
+            </div>
+            <div class="flex w-full flex-col justify-center overflow-hidden">
+              <a class="w-fit truncate font-bold hover:underline" href={data.href}>
+                {data.name}
+              </a>
+              <a href={data.artists[0].href} class="w-fit text-xs hover:underline">
+                {data.artists[0].name}
+              </a>
             </div>
           </div>
-        </div>
-        <div>
-          <button class="h-10 rounded bg-gray-200 px-4 py-1">Listen on Spotify</button>
-        </div>
+        {/if}
+        <!-- TODO: Add the unlikely scenario in which Spotify doesn't return anything -->
       </div>
-    {:else}
-      Isn't listening!
-    {/if}
+    </div>
   </div>
 </div>
+
+<style>
+  .animate-pulse-fast {
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+</style>
