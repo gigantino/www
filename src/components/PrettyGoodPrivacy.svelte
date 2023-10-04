@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { slide } from "svelte/transition";
   let isToggled = false;
 </script>
 
@@ -31,17 +32,20 @@
     </div>
   </button>
   {#if isToggled}
-    <div class="prose prose-zinc dark:prose-invert">
-      <slot />
+    <div
+      transition:slide
+      class="not-prose mt-3 rounded border bg-zinc-100 p-6 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900"
+    >
+      <pre class="overflow-x-auto"><slot /></pre>
     </div>
   {/if}
 </div>
 
 <style>
   .rotate {
-    -moz-transition: all 120ms linear;
-    -webkit-transition: all 120ms linear;
-    transition: all 120ms linear;
+    -moz-transition: all 130ms linear;
+    -webkit-transition: all 130ms linear;
+    transition: all 130ms linear;
   }
 
   .rotate.down {
