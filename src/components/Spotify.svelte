@@ -16,12 +16,12 @@
       <!-- Pulse animation on loading -->
       <div
         transition:fade={{ delay: 0, duration: 250 }}
-        class="animate-pulse-fast absolute h-full w-full rounded border border-zinc-700"
+        class="animate-pulse-fast absolute h-full w-full rounded border dark:border-zinc-700"
       >
-        <div class="h-full w-full rounded bg-zinc-950" />
+        <div class="h-full w-full rounded bg-zinc-100 dark:bg-zinc-950" />
       </div>
     {/if}
-    <div class="rounded border border-zinc-700 p-3">
+    <div class="rounded border p-3 dark:border-zinc-700">
       <div class="h-14">
         {#if data && data.name}
           <div class="flex h-full w-full gap-4">
