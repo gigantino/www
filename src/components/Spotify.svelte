@@ -5,7 +5,7 @@
 
   let data: SpotifyResponse | undefined = undefined;
   onMount(async () => {
-    const rawResponse = await fetch("http://localhost:3000/api/spotify.json");
+    const rawResponse = await fetch("/api/spotify.json");
     data = await rawResponse.json();
   });
 </script>
