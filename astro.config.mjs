@@ -13,7 +13,7 @@ export default defineConfig({
     port: 3000,
   },
   integrations: [tailwind(), mdx(), sitemap(), partytown(), svelte()],
-  output: "server",
+  output: "hybrid",
   adapter: vercel({
     edgeMiddleware: true,
     webAnalytics: {

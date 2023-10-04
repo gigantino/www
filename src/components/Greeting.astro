@@ -1,0 +1,5 @@
+---
+const city = decodeURIComponent(Astro.request.headers.get("x-vercel-ip-city"));
+---
+
+<h1>You are from {city}</h1>

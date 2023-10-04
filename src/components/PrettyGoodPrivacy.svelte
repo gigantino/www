@@ -26,7 +26,7 @@
       <div class="font-bold">Public PGP Key</div>
     </div>
     <div
-      class="rounded border bg-zinc-100 px-2 text-start font-mono text-sm font-bold text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+      class="rounded border bg-white px-2 text-start font-mono text-sm font-bold text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
     >
       {"29D4 5446 61EE 1AC7 61A9 3B9D 9375 2F01 8455 45C2"}
     </div>
@@ -34,9 +34,9 @@
   {#if isToggled}
     <div
       transition:slide
-      class="not-prose mt-3 rounded border bg-zinc-100 p-6 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
+      class="not-prose mt-3 rounded border bg-white p-6 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
     >
-      <pre class="overflow-x-auto"><slot /></pre>
+      <pre class="overflow-x-auto text-xs"><slot /></pre>
     </div>
   {/if}
 </div>

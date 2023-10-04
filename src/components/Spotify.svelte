@@ -17,7 +17,7 @@
       <!-- Hide the content behind (to avoid a thumbnail that didn't load to show) -->
       <div
         transition:fade={{ delay: 0, duration: 250 }}
-        class="absolute h-full w-full rounded border bg-zinc-900 dark:border-zinc-700"
+        class="absolute h-full w-full rounded border bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900"
       ></div>
       <!-- Pulse animation on loading -->
       <div
@@ -27,27 +27,30 @@
         <div class="h-full w-full rounded bg-zinc-100 dark:bg-zinc-950" />
       </div>
     {/if}
+
     <div class="rounded border p-3 dark:border-zinc-700">
-      <div class="h-14">
+      <div class="h-16">
         {#if data && data.name}
           <div class="flex h-full w-full gap-4">
-            <div class="w-14 flex-shrink-0 rounded-md">
+            <div class="w-16 flex-shrink-0 rounded-md">
               <img
                 src={data.thumbnailUrl}
                 class="aspect-square w-full flex-grow-0 rounded-md"
-                width="56"
-                height="56"
+                width="64"
+                height="64"
                 on:load={() => (isLoading = false)}
                 alt={data.name}
               />
             </div>
-            <div class="flex w-full flex-col justify-center overflow-hidden">
+            <div
+              class="flex w-full flex-col justify-center overflow-hidden text-zinc-700 dark:text-white"
+            >
               <a class="w-fit truncate font-bold hover:underline" href={data.href}>
                 {data.name}
               </a>
-              <a href={data.artists[0].href} class="w-fit hover:underline">
+              <span class="text-xs">
                 {data.artists[0].name}
-              </a>
+              </span>
             </div>
           </div>
         {/if}

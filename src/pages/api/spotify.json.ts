@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import querystring from "node:querystring";
@@ -32,19 +33,19 @@ const getAccessToken = async () => {
 
 export type SpotifyResponse =
   | {
-      isListening: true | false;
-      href: string;
+    isListening: true | false;
+    href: string;
+    name: string;
+    thumbnailUrl: string;
+    artists: {
       name: string;
-      thumbnailUrl: string;
-      artists: {
-        name: string;
-        href: string;
-      }[];
-    }
+      href: string;
+    }[];
+  }
   | {
-      isListening: false;
-      name: null;
-    };
+    isListening: false;
+    name: null;
+  };
 
 const getLastSong = async (): Promise<SpotifyResponse> => {
   const lastSpotifySong = (await redis.get("last-spotify-song").catch((err) => {
