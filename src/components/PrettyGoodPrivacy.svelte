@@ -34,7 +34,7 @@
   {#if isToggled}
     <div
       transition:slide
-      class="not-prose mt-3 rounded border bg-zinc-100 p-6 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900"
+      class="not-prose mt-3 rounded border bg-zinc-100 p-6 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white"
     >
       <pre class="overflow-x-auto"><slot /></pre>
     </div>
