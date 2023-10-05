@@ -30,8 +30,44 @@
 </script>
 
 {#if ready}
-  <h1 transition:fade>{getGreeting()}! 👋</h1>
+  <h1 transition:fade>{getGreeting()}! <span class="wave">👋</span></h1>
 {:else}
   <!-- Dirty hack to avoid a layout shift before the JS gets loaded -->
   <h1 style="opacity: 0;">hello! 👋</h1>
 {/if}
+
+<style>
+  .wave {
+    animation-name: wave-animation;
+    animation-duration: 2s;
+    animation-iteration-count: 3;
+    transform-origin: 70% 70%;
+    display: inline-block;
+    animation-delay: 1s;
+  }
+
+  @keyframes wave-animation {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    10% {
+      transform: rotate(14deg);
+    }
+    20% {
+      transform: rotate(-8deg);
+    }
+    30% {
+      transform: rotate(14deg);
+    }
+    40% {
+      transform: rotate(-4deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+    60% {
+      transform: rotate(0deg);
+    }
+  }
+</style>
