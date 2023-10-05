@@ -1,6 +1,6 @@
 ---
 layout: "@layouts/BlogLayout.astro"
-title: "home@gigantino.dev"
+title: "home"
 description: "Hello, world!"
 ---
 
@@ -13,38 +13,24 @@ import Spotify from "@components/Spotify.svelte";
 import PrettyGoodPrivacy from "@components/PrettyGoodPrivacy.svelte";
 
 <Greeting client:load />
+## Welcome to my internet corner!
 
-I'm a 20 year old full-stack developer currently based in Europe. I work with
-web technologies like <Badge type="nuxt" href="https://nuxt.com/" /> <Badge label="TypeScript" type="typescript" href="https://typescriptlang.org/" /> and <Badge type="tailwindcss" href="https://tailwindcss.com" label="TailwindCSS" />
-on a daily basis, but in my spare time I also enjoy tinkering with hardware and lower-level
-programming languages.
+I’m a 20-year-old full-stack developer currently based in Europe. I work with web technologies like <Badge type="nuxt" href="https://nuxt.com/" /> and <Badge label="TypeScript" type="typescript" href="https://typescriptlang.org/" /> daily, but I also enjoy tinkering with hardware and lower-level programming languages in my spare time.
 
 <Links />
 
-<Badge type="neovim" href="https://neovim.io"/> is my text-editor of choice, using a
-slightly modified version of [AstroNvim](https://astronvim.com/). You can find all my configs
-[here on GitHub](https://github.com/gigantino/rice).
+<Badge type="neovim" href="https://neovim.io"/> is my text editor of choice, using a slightly modified version of [AstroNvim](https://astronvim.com/). All my dotfiles can be found [here on GitHub](https://github.com/gigantino/rice).
 
-Also, I've been using Linux for around 10 years (with Ubuntu 13.10 being the first distro I've ever
-installed on my local machine). <Badge label="Arch" type="arch-linux" href="https://archlinux.org" />
-has been my daily driver for the past three years. I'm looking forward to experimenting
-with [Void](https://voidlinux.org/) in the near future.
+I've been using Linux for around 10 years (with Ubuntu 13.10 being the first distro I've ever installed). <Badge label="Arch" type="arch-linux" href="https://archlinux.org" /> has been my daily driver for the past three years, and I'm looking forward to experimenting with [Void](https://voidlinux.org/) in the near future.
 
-In my spare time I like making the drafts stored in
-my <Badge type="obsidian" href="https://obsidian.md/" /> vault come to life by writing
-in-depth articles about technical challanges I've had the chance to delve into.
-Have a read!
+
+In my spare time, I enjoy writing down my thoughts in my <Badge type="obsidian" href="https://obsidian.md/" /> vault, and occasionally, I publish posts about technical challenges I've had the chance to delve into. Have a read!
 
 <Posts />
 
-(Pssst! I also have an <Badge label="RSS" type="rss" href="/rss.xml"  /> feed!)
+_Pssst! <Badge label="RSS" type="rss" href="/rss.xml"  /> feed!_
 
-
-I like listening to <Badge type="spotify" href="https://spotify.com" />
-<Spotify client:load />
-
-
-Also, I have a PGP key!
+Do you like [PGP](https://en.wikipedia.org/wiki/Pretty_Good_Privacy)? I sure do! If you want to verify the authenticity of a message I sent or banally wish to send me a private e-mail, sign it with my public key.
 
 <PrettyGoodPrivacy client:load>
 -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -100,16 +86,16 @@ dzirBQXhuNhc3ZApRakaHKgmpEO6mm1QV1FLxujyv9Kz46dfih1Tpac=
 -----END PGP PUBLIC KEY BLOCK-----
 </PrettyGoodPrivacy>
 
+Remember to also send your public key along with your first message, or I won't be able to answer!
 
 ---
 
+Welcome to **the footer**! This website was built maily using <Badge label="Astro" type="astro" href="https://astro.build/"  /> and <Badge type="tailwindcss" href="https://tailwindcss.com" label="TailwindCSS" />. The entire source code can be found on [GitHub](https://github.com/gigantino/www) under the [MIT](https://github.com/gigantino/www/blob/main/LICENSE) license.
 
-This website was built with <Badge label="Astro" type="astro" href="https://astro.build/"  />
-and <Badge type="tailwindcss" href="https://tailwindcss.com" label="TailwindCSS" />.
-The entire source code can be found on [GitHub](https://github.com/gigantino/www)
+I listen to <Badge type="spotify" href="https://spotify.com" /> quite a bit. Feel free to check out the last song I was playing!
+<Spotify client:load />
 
-Licensed under the [MIT](https://github.com/gigantino/www/blob/main/LICENSE) license.
-Somewhat inspired by [this website](https://motherfuckingwebsite.com/).
+_Somewhat inspired by [this website](https://motherfuckingwebsite.com/)._
 
-Statically rendered the <RenderedAt />
+_This page was statically rendered on the <RenderedAt />._
 

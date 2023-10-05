@@ -15,5 +15,5 @@ const { type, href, label } = Astro.props;
   href={href}
 >
   <Icon name={type} class="h-3 w-3" />
-  <span class="capitalize">{label ? label : type}</span>
+  <span class="capitalize">{label || type}</span>
 </a>
