@@ -11,6 +11,7 @@ const allPosts = await Astro.glob("../pages/blog/*.mdx");
           href={post.url}
           title={post.frontmatter.title}
           description={post.frontmatter.description}
+          tags={post.frontmatter.tags}
         />
       ))
     }

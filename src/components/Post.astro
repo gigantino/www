@@ -3,13 +3,14 @@ interface Props {
   href?: string;
   title?: string;
   description?: string;
+  tags?: string[];
 }
 
-const { title, description, href } = Astro.props;
+const { title, description, href, tags } = Astro.props;
 ---
 
 <a
-  class="group flex w-full justify-between gap-2 rounded border bg-zinc-50 px-3 py-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+  class="group flex w-full flex-col justify-between gap-2 rounded border bg-zinc-50 px-3 py-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
   href={href}
 >
   <div class="flex flex-col">
@@ -20,4 +21,15 @@ const { title, description, href } = Astro.props;
       {description}
     </p>
   </div>
+  {
+    tags && (
+      <div class="inline-flex gap-1">
+        {tags.map((t) => (
+          <span class="rounded-full border px-2 text-sm dark:border-zinc-700 dark:text-zinc-300">
+            {t}
+          </span>
+        ))}
+      </div>
+    )
+  }
 </a>
