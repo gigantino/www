@@ -8,6 +8,7 @@ import Badge from "@components/Badge.astro";
 import Greeting from "@components/Greeting.svelte"
 import Links from "@components/Links.astro";
 import Posts from "@components/Posts.astro";
+import RenderedAt from "@components/RenderedAt.astro"
 import Spotify from "@components/Spotify.svelte";
 import PrettyGoodPrivacy from "@components/PrettyGoodPrivacy.svelte";
 
@@ -102,9 +103,13 @@ dzirBQXhuNhc3ZApRakaHKgmpEO6mm1QV1FLxujyv9Kz46dfih1Tpac=
 
 ---
 
+
 This website was built with <Badge label="Astro" type="astro" href="https://astro.build/"  />
 and <Badge type="tailwindcss" href="https://tailwindcss.com" label="TailwindCSS" />.
 The entire source code can be found on [GitHub](https://github.com/gigantino/www)
 
 Licensed under the [MIT](https://github.com/gigantino/www/blob/main/LICENSE) license.
 Somewhat inspired by [this website](https://motherfuckingwebsite.com/).
+
+Statically rendered the <RenderedAt />
+
