@@ -3,8 +3,19 @@
   import { onMount } from "svelte";
 
   let ready = false;
+  let displayText = "";
   onMount(() => {
     ready = true;
+    const greeting = getGreeting();
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < greeting.length) {
+        displayText += greeting[index];
+        index += 1;
+      } else {
+        clearInterval(interval);
+      }
+    }, 100);
   });
 
   const getGreeting = () => {
@@ -25,15 +36,18 @@
       hu: "helló",
       cz: "ahoj",
     };
-    return (greetings[languageCode as keyof typeof greetings] || "hello") as string;
+    const greeting = (greetings[languageCode as keyof typeof greetings] || "hello") as string;
+    return `${greeting}!`;
   };
 </script>
 
 {#if ready}
-  <h1 transition:fade>{getGreeting()}! <span class="wave">👋</span></h1>
+  <h1>
+    <span class="wave">👋</span>
+    {displayText}
+  </h1>
 {:else}
-  <!-- Dirty hack to avoid a layout shift before the JS gets loaded -->
-  <h1 style="opacity: 0;">hello! 👋</h1>
+  <h1>👋</h1>
 {/if}
 
 <style>
@@ -43,7 +57,7 @@
     animation-iteration-count: 1;
     transform-origin: 70% 70%;
     display: inline-block;
-    animation-delay: 1s;
+    animation-delay: 0.5s;
   }
 
   @keyframes wave-animation {

@@ -1,4 +1,4 @@
-export const prerender = false;
+export const prerender = true;
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import querystring from "node:querystring";
