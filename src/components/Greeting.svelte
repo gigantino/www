@@ -40,10 +40,10 @@
   .wave {
     animation-name: wave-animation;
     animation-duration: 2s;
-    animation-iteration-count: 3;
+    animation-iteration-count: 1;
     transform-origin: 70% 70%;
     display: inline-block;
-    animation-delay: 1s;
+    animation-delay: 2s;
   }
 
   @keyframes wave-animation {
