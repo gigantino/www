@@ -43,7 +43,7 @@
     animation-iteration-count: 1;
     transform-origin: 70% 70%;
     display: inline-block;
-    animation-delay: 2s;
+    animation-delay: 1s;
   }
 
   @keyframes wave-animation {
