@@ -1,5 +1,6 @@
 ---
 import Navigation from "@components/Navigation.astro";
+import HomeButton from "@components/HomeButton.astro";
 import { ViewTransitions } from "astro:transitions";
 
 const { title, description } = Astro.props.frontmatter || Astro.props;
@@ -22,11 +23,18 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
     <title>{title + " - gigantino.dev"}</title>
     <ViewTransitions fallback="swap" />
   </head>
-  <body class="bg-zinc-50 dark:bg-zinc-900 dark:text-white">
-    <div class="px-4 py-14">
+  <body class="bg-white dark:bg-zinc-900 dark:text-white">
+    <div class="px-8 py-14">
       <Navigation />
-      <main class="prose prose-zinc m-auto dark:prose-invert" transition:animate="slide">
+      <main class="prose prose-zinc m-auto dark:prose-invert" transition:animate="fade">
         <slot />
+        {
+          Astro.url.pathname != "/" && (
+            <a href="/" class="font-bold">
+              {"cd ../"}
+            </a>
+          )
+        }
       </main>
     </div>
   </body>
