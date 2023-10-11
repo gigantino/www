@@ -1,7 +1,5 @@
 ---
 import Navigation from "@components/Navigation.astro";
-import HomeButton from "@components/HomeButton.astro";
-import { ViewTransitions } from "astro:transitions";
 
 const { title, description } = Astro.props.frontmatter || Astro.props;
 ---
@@ -21,17 +19,18 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
     <title>{title + " - gigantino.dev"}</title>
-    <ViewTransitions fallback="swap" />
   </head>
   <body class="bg-white dark:bg-zinc-900 dark:text-white">
     <div class="px-6 py-14">
       <Navigation />
-      <main class="prose prose-zinc m-auto dark:prose-invert" transition:animate="fade">
+      <main class="prose prose-zinc m-auto dark:prose-invert">
         <slot />
         {
           Astro.url.pathname != "/" && (
-            <a href="/" class="font-bold">
-              {"cd ../"}
+            <a href="/">
+              <button class="rounded-full border bg-zinc-50 px-2 font-bold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
+                {"< Homepage"}
+              </button>
             </a>
           )
         }
