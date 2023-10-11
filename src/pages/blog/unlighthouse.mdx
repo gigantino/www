@@ -1,0 +1,313 @@
+---
+layout: "@layouts/BlogLayout.astro"
+title: "Automating lighthouse reports with Unlighthouse"
+description: "Build a CI/CD with GitHub actions to track your lighthouse scores."
+pubDate: 2023-10-10
+---
+# Automating lighthouse reports with Unlighthouse
+
+Recently, I've had to build a continuous integration to automatically check for lighthouse reports and send notifications on Microsoft Teams if the scores were too low. The implementation not only ended up being completely free of charge but it's also pretty straightforward so I figured other people might find it interesting.
+
+## Do you really need this kind of implementation?
+
+If you use [Vercel](https://vercel.com/) or [Netlify](https://netlify.com/), chances are you don't. Both offer ways to get Lighthouse reports automatically in their different ways. Vercel calls them "[Speed insights](https://vercel.com/docs/speed-insights/)". They are updated even after your first deployment and display historical data with graphs. Netlify, on the other hand, has a [Lighthouse extension](https://docs.netlify.com/monitor-sites/lighthouse/) that shows standard lighthouse reports on every build.
+
+In my case I was using Netlify, so _why_ did I need to build my own CI/CD integration? Well, they both don't have a way to send notifications if certain conditions aren't met and they also don't support websites that make use of [Basic Auth](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication/).
+
+## Unlighthouse comes into play
+
+> Like Lighthouse, but it scans every single page.
+
+I'm genuinely impressed that [Unlighthouse](https://unlighthouse.dev/) isn't more popular. The project only has [~3000 stars on GitHub](https://github.com/harlan-zw/unlighthouse) at the time of writing, but in my opinion it absolutely deserves more. It offers a powerful CLI that, on average, can scan entire websites in _two minutes!_
+
+Implementing it in your CI/CD pipeline is straightforward and they offer a clear example in their [docs](https://unlighthouse.dev/integrations/ci#github-actions-netlify-example). In my case though, I needed a way to send external Microsoft Teams notifications if specific conditions weren't met.
+
+> <span>Don't worry if you don't specifically use Microsoft Teams! Most services out there support webhooks, which means that you could potentially make it work with any platform by doing some minor changes.</span>
+
+## GitHub webhook setup
+
+With my current requirements, I needed Unlighthouse to run on each new build. Deploying the action on each commit (which is how we fire our development builds) isn't smart since builds take longer than Unlighthouse to deploy. This meant that I needed to run a webhook instead.
+
+Unfortunately, GitHub actions don't support webhooks and use [workflow dispatches](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows) instead. In short, to fire them, you are required to send a bearer token like so:
+
+```sh
+curl -L \ -X POST \ -H "Accept: application/vnd.github+json" \ -H "Authorization: Bearer <YOUR-TOKEN>" \ -H "X-GitHub-Api-Version: 2022-11-28" \ https://api.github.com/repos/OWNER/REPO/actions/workflows/WORKFLOW_ID/dispatches \ -d '{"ref":"topic-branch","inputs":{"name":"Mona the Octocat","home":"San Francisco, CA"}}'
+```
+
+I had to build a wrapper around them to make them behave like an actual webhook. This can be done in many ways, like spinning up a serverless function or adding a route to your existing API. In JavaScript, it would look something like this:
+
+```js
+const req = await fetch(
+  "https://api.github.com/repos/OWNER/REPO/dispatches",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/vnd.github+json",
+      Authorization: "Bearer YOUR_TOKEN",
+    },
+    body: JSON.stringify({ event_type: "YOUR_EVENT" }),
+  }
+);
+
+if (!req.ok) {
+  throw new Error("Not okay :(");
+}
+// ...
+```
+
+Keep in mind that this is an example and **should not** be used in production. This is because everyone with a link to your webhook would be able to fire an event, which is dangerous as Actions' free plan offers only 2000 minutes of execution per month (and up to 50,000 for their Enterprise plan). In short, you need to find a way to sign your requests.
+
+In my case, I’m using Netlify to fire webhooks, and all of their requests are signed using [JWS](https://docs.netlify.com/site-deploys/notifications/#payload-signature). Their docs have an example written in Ruby, and rewriting it in your language of choice shouldn’t be too difficult.
+
+```rb
+require "digest"
+require "jwt"
+require "sinatra"
+
+def signed(request, body)
+  signature = request["X-Webhook-Signature"]
+  return unless signature
+
+  options = {iss: "netlify", verify_iss: true, algorithm: "HS256"}
+  decoded = JWT.decode(signature, "your signature secret", true, options)
+
+  ## decoded :
+  ## [
+  ##   { sha256: "..." }, # this is the data in the token
+  ##   { alg: "..." } # this is the header in the token
+  ## ]
+  decoded.first[:sha256] == Digest::SHA256.hexdigest(body)
+rescue JWT::DecodeError
+  false
+end
+
+post "/netlify-hook" do
+  body = request.body.read
+  halt 403 unless signed(request, body)
+
+  json = JSON.parse(body)
+  # do something with the notification payload here
+end
+```
+
+If you don't know where to start, I would have a look at [JWT](https://jwt.io/).
+
+## Deploying Unlighthouse to Netlify
+
+Deploying Unlighthouse to Netlify can be done for free, and you only need to create a new project and get the following variables and store them in your GitHub repository secrets:
+
+- `NETLIFY_AUTH_TOKEN` (found in **User settings > OAuth > Personal access tokens**) 
+- `NETLIFY_SITE_ID` (found in **Site configuration > General > Site details > Site ID**)
+
+Obviously, you aren't forced to host Unlighthouse on Netlify, but I consider it the most effortless approach.
+
+## Configuring the Webhook (Microsoft Teams)
+
+It’s time to create a webhook in the channel where you wish to receive notifications. It shouldn’t be too trivial and is explained [here](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet) in great detail. All you need to do is test the webhook (using CURL, Insomnia, Postman, or whatever you like) and store the generated webhook URL in your repository secrets as `TEAMS_UNLIGHTHOUSE_WEBHOOK` once you are sure that it works.
+
+The script that I wrote is the following:
+
+```js
+// scripts/unlighthouse.mjs
+import { readFileSync } from 'fs'
+const report = JSON.parse(readFileSync('./.unlighthouse/ci-result.json'))
+
+// minimum acceptable scores (from 0 to 1)
+const minScores = {
+  performance: 0.9,
+  accessibility: 1,
+  seo: 1,
+  bestPractices: 1,
+}
+
+if (!report) {
+  console.error('The report file is missing! [SKIPPING WEBHOOK]')
+  process.exit(0)
+}
+
+const averageScores = {
+  performance: report.summary.categories.performance.averageScore,
+  accessibility: report.summary.categories.accessibility.averageScore,
+  seo: report.summary.categories.seo.averageScore,
+  bestPractices: report.summary.categories['best-practices'].averageScore,
+}
+
+const routes = report.routes
+
+const failedPaths = {
+  performance: 0,
+  accessibility: 0,
+  seo: 0,
+  bestPractices: 0,
+}
+
+const lowestScores = {
+  performance: 100,
+  accessibility: 100,
+  seo: 100,
+  bestPractices: 100,
+}
+
+function increaseIfFailedPath(routeScores, key) {
+  const currentScore = routeScores[key]
+  if (currentScore < minScores[key]) {
+    console.log(`[+] Failed '${key}' (${currentScore} < ${minScores[key]})`)
+    failedPaths[key] += 1
+    if (currentScore < lowestScores[key]) {
+      lowestScores[key] = currentScore
+    }
+  }
+}
+
+for (let route of routes) {
+  const routeScores = {
+    performance: route.categories.performance.score,
+    accessibility: route.categories.accessibility.score,
+    seo: route.categories.seo.score,
+    bestPractices: route.categories['best-practices'].score,
+  }
+
+  increaseIfFailedPath(routeScores, 'performance')
+  increaseIfFailedPath(routeScores, 'accessibility')
+  increaseIfFailedPath(routeScores, 'seo')
+  increaseIfFailedPath(routeScores, 'bestPractices')
+}
+
+console.log(failedPaths)
+
+const webhookPayload = [
+  {
+    type: 'TextBlock',
+    text: '🤖 **A new Unlighthouse report was created!**',
+  },
+]
+let isPerfectScore = true
+
+function addReportToPayload(key, icon, title) {
+  const failedReports = failedPaths[key]
+  if (failedReports >= 1) {
+    isPerfectScore = false
+
+    const testLabel = failedReports == 1 ? 'test' : 'tests'
+    const reportsFailedLabel = `${icon} **${failedReports}** ${title} ${testLabel} **failed**`
+
+    webhookPayload.push({
+      type: 'TextBlock',
+      text: `${reportsFailedLabel}! _Score lower than ${(
+        minScores[key] * 100
+      ).toFixed()}%_`,
+    })
+    webhookPayload.push({
+      type: 'TextBlock',
+      text: `Avg score: **${(
+        averageScores[key] * 100
+      ).toFixed()}%** | Min score: **${(lowestScores[key] * 100).toFixed()}%**`,
+    })
+  }
+}
+
+addReportToPayload('performance', '🚀', 'Performance')
+addReportToPayload('seo', '🔍', 'SEO')
+addReportToPayload('accessibility', '♿', 'Accessibility')
+addReportToPayload('bestPractices', '📚', 'Best Practices')
+
+if (isPerfectScore) {
+  webhookPayload.push({
+    type: 'TextBlock',
+    text: '🎉 Good news! This build passed all the tests',
+  })
+}
+
+webhookPayload.push({
+  type: 'TextBlock',
+  text: '🔍 [Click here](YOUR_DEPLOYMENT_LINK) to inspect the report.',
+})
+
+const webhookUrl = process.env.TEAMS_UNLIGHTHOUSE_WEBHOOK
+if (!webhookUrl) {
+  console.log("Missing 'TEAMS_UNLIGHTHOUSE_WEBHOOK'")
+  process.exit(0)
+}
+
+await fetch(process.env.TEAMS_UNLIGHTHOUSE_WEBHOOK, {
+  method: 'POST',
+  body: JSON.stringify({
+    type: 'message',
+    attachments: [
+      {
+        contentType: 'application/vnd.microsoft.card.adaptive',
+        contentUrl: null,
+        content: {
+          $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
+          type: 'AdaptiveCard',
+          version: '1.2',
+          body: webhookPayload,
+        },
+      },
+    ],
+  }),
+})
+```
+
+> <span>I personally saved the file to the directory `./scripts/unlighthouse.mjs`. If you are planning to use a different directory keep in mind that you should also change the GitHub action in the following step.</span>
+
+This script _can_ and _will_ run locally if you want to test it by running the following commands. Keep in mind that should add `.unlighthouse` to your `.gitignore`.
+
+```sh
+npm install -g @unlighthouse/cli puppeteer 
+```
+
+```sh
+unlighthouse-ci --site YOUR_WEBSITE_URL --reporter jsonExpanded --build-static
+```
+
+```sh
+TEAMS_UNLIGHTHOUSE_WEBHOOK=YOUR_WEBHOOK_URL node ./scripts/unlighthouse.mjs
+```
+
+## Let the action begin.
+
+By now you should have 3 secrets stored in your GitHub repository:
+```
+TEAMS_UNLIGHTHOUSE_WEBHOOK
+NETLIFY_AUTH_TOKEN
+NETLIFY_SITE_ID
+```
+
+With that you can simply create `.github/workflows/unlighthouse.yml`
+```yml
+name: Unlighthouse
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+jobs:
+  unlighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        run: npm install -g @unlighthouse/cli puppeteer netlify-cli
+
+      - name: Run Unlighthouse
+        run: unlighthouse-ci --site YOUR_WEBSITE_URL --reporter jsonExpanded --build-static
+
+      - name: Send webhook
+        run: node ./scripts/unlighthouse.mjs
+        env:
+          TEAMS_UNLIGHTHOUSE_WEBHOOK: ${{ secrets.TEAMS_UNLIGHTHOUSE_WEBHOOK }}
+
+      - name: Deploy to Netlify
+        run: cd .unlighthouse && netlify deploy --dir=../.unlighthouse --prod --message="New Unlighthouse deploy from GitHub"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+```
+
+And you should be good to go.
+
+If you have any more questions, feel free to send me an [email](mailto://hello@gigantino.dev)!
