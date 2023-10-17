@@ -5,13 +5,20 @@ const allPosts = await Astro.glob("../pages/blog/*.mdx");
 
 <div class="not-prose flex flex-col gap-4">
   {
-    allPosts.map((post) => (
-      <Post
-        href={post.url}
-        title={post.frontmatter.title}
-        description={post.frontmatter.description}
-        tags={post.frontmatter.tags}
-      />
-    ))
+    allPosts
+      .sort((a, b) => {
+        return (
+          new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime()
+        );
+      })
+      .map((post) => (
+        <Post
+          href={post.url}
+          title={post.frontmatter.title}
+          description={post.frontmatter.description}
+          tags={post.frontmatter.tags}
+          pubDate={post.frontmatter.pubDate}
+        />
+      ))
   }
 </div>

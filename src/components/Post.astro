@@ -4,9 +4,16 @@ interface Props {
   title?: string;
   description?: string;
   tags?: string[];
+  pubDate?: string;
 }
 
-const { title, description, href, tags } = Astro.props;
+const { title, description, href, tags, pubDate } = Astro.props;
+
+function formatDate(dateString: string) {
+  const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "short", year: "numeric" };
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-GB", options).format(date);
+}
 ---
 
 <a
@@ -32,4 +39,5 @@ const { title, description, href, tags } = Astro.props;
       </div>
     )
   }
+  {pubDate && <span class="text-xs dark:text-zinc-300">{formatDate(pubDate)}</span>}
 </a>
