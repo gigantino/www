@@ -104,7 +104,7 @@ Obviously, you aren't forced to host Unlighthouse on Netlify, but I consider it 
 
 ## Configuring the Webhook (Microsoft Teams)
 
-It’s time to create a webhook in the channel where you wish to receive notifications. It shouldn’t be too trivial and is explained [here](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet) in great detail. All you need to do is test the webhook (using CURL, Insomnia, Postman, or whatever you like) and store the generated webhook URL in your repository secrets as `TEAMS_UNLIGHTHOUSE_WEBHOOK` once you are sure that it works.
+It’s time to create a webhook in the channel where you wish to receive notifications. [It's explained in great detail in their docs](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet) and implementing it shouldn't be too trivial. All you need to do is test the webhook (using CURL, Insomnia, Postman, or whatever you like) and store the generated webhook URL in your repository secrets as `TEAMS_UNLIGHTHOUSE_WEBHOOK` once you are sure that it works.
 
 The script that I wrote is the following:
 
