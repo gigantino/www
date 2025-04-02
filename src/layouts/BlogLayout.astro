@@ -8,8 +8,8 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
 <html lang="en" transition:animate="none">
   <head>
     <meta charset="UTF-8" />
-    <meta property="og:site_name" content="gigantino.dev" />
-    <meta property="og:url" content="https://gigantino.dev/" />
+    <meta property="og:site_name" content="legacy.ggtn.ch" />
+    <meta property="og:url" content="https://legacy.ggtn.ch/" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta name="description" content={description} />
@@ -18,7 +18,7 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title + " - gigantino.dev"}</title>
+    <title>{title + " - ggtn.ch"}</title>
   </head>
   <body class="bg-white dark:bg-zinc-900 dark:text-white">
     <div class="px-6 py-14">
@@ -27,7 +27,7 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
         <slot />
         {
           Astro.url.pathname != "/" && (
-            <a href="/">
+            <a href="https://ggtn.ch">
               <button class="rounded-full border bg-zinc-50 px-2 font-bold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
                 {"< Homepage"}
               </button>

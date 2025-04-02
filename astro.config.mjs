@@ -8,7 +8,7 @@ import svelte from "@astrojs/svelte";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://gigantino.dev",
+  site: "https://legacy.ggtn.ch",
   server: {
     port: 3000,
   },

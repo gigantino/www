@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gigantino.dev/sitemap-index.xml
+Sitemap: https://legacy.ggtn.ch/sitemap-index.xml
