@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  publicRuntimeConfig: {
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://ggtn.ch",
+  },
 };
 
 export default nextConfig;
