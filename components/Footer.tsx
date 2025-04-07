@@ -5,6 +5,11 @@ import SpotifySkeleton from "./skeletons/Spotify";
 export default function Footer() {
   return (
     <div className="flex flex-col gap-5">
+      <p>Check out the last song I was vibing to on Spotify:</p>
+      <Suspense fallback={<SpotifySkeleton />}>
+        <Spotify />
+      </Suspense>
+      <hr />
       <p>
         If you are interested in seeing how this website was built, the entire
         source code can be found on{" "}
@@ -23,13 +28,6 @@ export default function Footer() {
         </a>
         .
       </p>
-      <p>
-        I can't live without music. Check out the last song I was listening to
-        on Spotify:
-      </p>
-      <Suspense fallback={<SpotifySkeleton />}>
-        <Spotify />
-      </Suspense>
       <p>
         Somewhat inspired by{" "}
         <a

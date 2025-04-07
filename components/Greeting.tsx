@@ -5,7 +5,7 @@ import ScrambleIn, {
 } from "@/fancy/components/text/scramble-in";
 
 export default function Greeting() {
-  const text = "hello there!";
+  const text = "hello, human!";
 
   const scrambleRef = useRef<ScrambleInHandle | null>(null);
 

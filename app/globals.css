@@ -164,3 +164,8 @@
     opacity: 0.5;
   }
 }
+
+@theme inline {
+  --font-geist-sans: var(--font-geist-sans);
+  --font-geist-mono: var(--font-geist-mono);
+}

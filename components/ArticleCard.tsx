@@ -25,7 +25,7 @@ export default function ArticleCard({
 }: ArticleCardProps) {
   return (
     <a
-      className="group flex w-full flex-col justify-between gap-2 rounded border bg-zinc-50 px-3 py-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+      className="group flex w-full flex-col justify-between gap-2 border bg-zinc-50 px-3 py-4 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white"
       href={href}
     >
       <div className="flex flex-col">
@@ -35,16 +35,11 @@ export default function ArticleCard({
         <p className="text-zinc-600 dark:text-zinc-300">{description}</p>
       </div>
       {tags && (
-        <div className="inline-flex gap-1">
-          {tags.map((t, index) => (
-            <span
-              key={index}
-              className="rounded-full border bg-white px-2 text-sm dark:border-zinc-700 dark:bg-transparent dark:text-zinc-300"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
+        <span className="text-xs font-mono uppercase">
+          {tags
+            .map((t, i) => `${t}${i + 1 !== tags.length ? " |" : ""}`)
+            .join(" ")}
+        </span>
       )}
       {pubDate && (
         <span className="text-xs dark:text-zinc-300">
