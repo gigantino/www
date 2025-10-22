@@ -5,8 +5,8 @@
 @theme {
   --font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-background: #fafafa;
-  --color-foreground: #0a0a0a;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
   --color-muted: #f5f5f5;
   --color-muted-foreground: #737373;
   --color-border: #e5e5e5;
