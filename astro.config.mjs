@@ -1,10 +1,11 @@
 import { defineConfig } from "astro/config";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
 import svelte from "@astrojs/svelte";
+import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,8 +13,11 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  integrations: [tailwind(), mdx(), sitemap(), partytown(), svelte()],
-  output: "hybrid",
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  integrations: [mdx(), sitemap(), partytown(), svelte(), icon()],
+  output: "server",
   adapter: vercel({
     webAnalytics: {
       enabled: true,
