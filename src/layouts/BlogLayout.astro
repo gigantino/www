@@ -1,5 +1,6 @@
 ---
 import Navigation from "@components/Navigation.astro";
+import Links from "@components/Links.astro";
 import "../styles/global.css";
 
 const { title, description } = Astro.props.frontmatter || Astro.props;
@@ -21,18 +22,32 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title + " - ggtn.ch"}</title>
   </head>
-  <body class="bg-white dark:bg-zinc-900 dark:text-white">
-    <div class="px-6 py-14">
+  <body class="bg-background text-foreground">
+    <div class="mx-auto max-w-3xl px-6 py-14">
       <Navigation />
-      <main class="prose prose-zinc m-auto dark:prose-invert">
+      <Links />
+      {
+        Astro.url.pathname != "/" && (
+          <div class="mb-8">
+            <a href="/">
+              <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent">
+                {"← Homepage"}
+              </button>
+            </a>
+          </div>
+        )
+      }
+      <main class="prose prose-neutral prose-sm" style={Astro.url.pathname.includes('/blog/') ? "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;" : ""}>
         <slot />
         {
           Astro.url.pathname != "/" && (
-            <a href="https://ggtn.ch">
-              <button class="rounded-full border bg-zinc-50 px-2 font-bold text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white">
-                {"< Homepage"}
-              </button>
-            </a>
+            <div class="mt-8">
+              <a href="/">
+                <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent">
+                  {"← Homepage"}
+                </button>
+              </a>
+            </div>
           )
         }
       </main>

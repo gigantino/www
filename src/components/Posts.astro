@@ -1,6 +1,9 @@
 ---
 import Post from "./Post.astro";
-const allPosts = await Astro.glob("../pages/blog/*.mdx");
+const posts = import.meta.glob("../pages/blog/*.mdx");
+const allPosts = await Promise.all(
+  Object.values(posts).map((importFn) => importFn())
+);
 ---
 
 <div class="not-prose flex flex-col gap-4">

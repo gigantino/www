@@ -4,38 +4,25 @@ title: "home"
 description: "Hello, world!"
 ---
 
-import Badge from "@components/Badge.astro";
-import Greeting from "@components/Greeting.svelte"
-import Links from "@components/Links.astro";
-import Posts from "@components/Posts.astro";
 import RenderedAt from "@components/RenderedAt.astro"
-import PrettyGoodPrivacy from "@components/PrettyGoodPrivacy.svelte";
 
-<Greeting client:load />
+I'm a full-stack developer with over 5 years of experience under my belt, currently based in Geneva, Switzerland.
 
-I’m a 21-year-old full-stack developer currently based in <Badge type="flag_ch" label="Switzerland" />. I work with web technologies daily, but I also enjoy tinkering with hardware and lower-level programming languages in my spare time.
+I work with web technologies daily, and I also enjoy tinkering with hardware and lower-level programming languages in my spare time.
 
-<Links />
+## Writing
 
-## Blog
+1. [How I made an AI-generated show](/blog/ai-generated-show) — They weren't joking when they said that, in the future, entertainment would be artificially generated. <span style="color: var(--color-muted-foreground);">October 17, 2023</span>
+2. [Automating lighthouse reports with Unlighthouse](/blog/unlighthouse) — Build a CI/CD with GitHub actions to track your lighthouse scores. <span style="color: var(--color-muted-foreground);">October 10, 2023</span>
 
-For a long time I've been writing small drafts in my <Badge type="obsidian" href="https://obsidian.md/" /> vault and just recently I decided to polish and publish some of them to see how it goes. Have a read!
+I also have an [RSS](/rss.xml) feed.
 
-<Posts />
+## Projects
 
-_Pssst! I also have an <Badge label="RSS" type="rss" href="/rss.xml"  /> feed!_
-
----
-
-<Badge type="neovim" href="https://neovim.io"/> is my text editor of choice, using a slightly modified version of [AstroNvim](https://astronvim.com/). All my dotfiles can be found [here on GitHub](https://github.com/gigantino/rice).
-
-I've been using Linux for around 10 years (with Ubuntu 13.10 being the first distro I've ever installed). <Badge label="Arch" type="arch-linux" href="https://archlinux.org" /> has been my daily driver for the past three years. I'm looking forward to experimenting with [Void](https://voidlinux.org/) in the near future.
-
----
-
-This website was built mainly using <Badge type="astro" href="https://astro.build/" />, <Badge type="svelte" href="https://svelte.dev/" /> and <Badge type="tailwindcss" href="https://tailwindcss.com" label="TailwindCSS" />. The entire source code can be found on [GitHub](https://github.com/gigantino/www) under the [MIT](https://github.com/gigantino/www/blob/main/LICENSE) license.
-
-_Somewhat inspired by [this website](https://motherfuckingwebsite.com/)._
-
-_Statically rendered on the <RenderedAt />._
+1. [Delizioso](https://delizioso.app) — The SaaS for restaurants I'm currently working on.
+2. [CoralProxy](https://coralproxy.it) — An app to improve the gaming experience using a proxy between server and client.
+3. [diplate.ch](https://diplate.ch/) — Get info about diplomatic plates in Switzerland.
+4. [hn](https://hn.ggtn.ch/) — A modern yet lightweight front-end for HackerNews.
+5. [vibe-api](https://github.com/gigantino/vibe-api) — The API for Vibe Coders. I developed this on April Fool's Day, powered by caffeine, bad decisions and occasional enlightenment.
+6. [init7-iptv-igmp-proxy](https://init7.ggtn.ch/) — Dynamic proxy between Init7 IPTV (TV7) and your local IGMP network configuration.
 

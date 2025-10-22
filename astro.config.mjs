@@ -4,7 +4,6 @@ import mdx from "@astrojs/mdx";
 import vercel from "@astrojs/vercel";
 import sitemap from "@astrojs/sitemap";
 import partytown from "@astrojs/partytown";
-import svelte from "@astrojs/svelte";
 import icon from "astro-icon";
 
 // https://astro.build/config
@@ -16,7 +15,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  integrations: [mdx(), sitemap(), partytown(), svelte(), icon()],
+  integrations: [mdx(), sitemap(), partytown(), icon()],
   output: "server",
   adapter: vercel({
     webAnalytics: {

@@ -1,2 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@theme {
+  --font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: #fafafa;
+  --color-foreground: #0a0a0a;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #737373;
+  --color-border: #e5e5e5;
+  --color-accent: #efefef;
+  --color-accent-foreground: #0a0a0a;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  font-family: var(--font-family-mono);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: normal;
+}
+
+.prose {
+  font-style: normal;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.prose h1 {
+  font-size: 2.2rem;
+  line-height: 1.5;
+  letter-spacing: normal;
+  font-weight: 600;
+}
+
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-size: 1.2375rem;
+  line-height: 1.75;
+  letter-spacing: normal;
+  font-weight: 500;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose code,
+.prose pre {
+  font-family: var(--font-family-mono);
+}
+
+.prose a,
+a {
+  --tw-text-opacity: 1;
+  color: rgb(29 78 216 / var(--tw-text-opacity));
+}
