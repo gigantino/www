@@ -3,7 +3,7 @@ import Navigation from "@components/Navigation.astro";
 import Links from "@components/Links.astro";
 import "../styles/global.css";
 
-const { title, description } = Astro.props.frontmatter || Astro.props;
+const { title, description, pubDate } = Astro.props.frontmatter || Astro.props;
 ---
 
 <!doctype html>
@@ -30,7 +30,7 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
         Astro.url.pathname != "/" && (
           <div class="mb-8">
             <a href="/">
-              <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent">
+              <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent cursor-pointer">
                 {"← Homepage"}
               </button>
             </a>
@@ -38,12 +38,20 @@ const { title, description } = Astro.props.frontmatter || Astro.props;
         )
       }
       <main class="prose prose-neutral prose-sm" style={Astro.url.pathname.includes('/blog/') ? "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;" : ""}>
+        {title && pubDate && Astro.url.pathname.includes('/blog/') && (
+          <>
+            <h1>{title}</h1>
+            <div class="text-sm text-muted-foreground -mt-4 mb-6">
+              {new Date(pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </div>
+          </>
+        )}
         <slot />
         {
           Astro.url.pathname != "/" && (
             <div class="mt-8">
               <a href="/">
-                <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent">
+                <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent cursor-pointer">
                   {"← Homepage"}
                 </button>
               </a>

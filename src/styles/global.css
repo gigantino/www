@@ -25,12 +25,14 @@ body {
   font-size: 16px;
   line-height: 24px;
   letter-spacing: normal;
+  font-weight: 500;
 }
 
 .prose {
   font-style: normal;
   font-size: 16px;
   line-height: 24px;
+  font-weight: 400;
 }
 
 .prose h1 {
@@ -68,4 +70,5 @@ body {
 a {
   --tw-text-opacity: 1;
   color: rgb(29 78 216 / var(--tw-text-opacity));
+  font-weight: 400;
 }
