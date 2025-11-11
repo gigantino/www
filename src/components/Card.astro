@@ -1,0 +1,16 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date?: string;
+}
+
+const { href, title, description, date } = Astro.props;
+---
+
+<a href={href} class="flex flex-col gap-1 p-4 border border-border rounded-md bg-muted hover:bg-accent transition-all no-underline text-foreground">
+  <div class="font-medium">{title}</div>
+  <div class="text-sm text-muted-foreground">{description}</div>
+  {date && <time class="text-xs text-muted-foreground">{date}</time>}
+</a>
