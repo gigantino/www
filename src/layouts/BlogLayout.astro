@@ -37,7 +37,7 @@ const { title, description, pubDate } = Astro.props.frontmatter || Astro.props;
           </div>
         )
       }
-      <main class="prose prose-neutral prose-sm" style={Astro.url.pathname.includes('/blog/') ? "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;" : ""}>
+      <main class="prose prose-neutral prose-sm">
         {title && pubDate && Astro.url.pathname.includes('/blog/') && (
           <>
             <h1>{title}</h1>
@@ -46,7 +46,9 @@ const { title, description, pubDate } = Astro.props.frontmatter || Astro.props;
             </div>
           </>
         )}
-        <slot />
+        <div style={Astro.url.pathname.includes('/blog/') ? "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;" : ""}>
+          <slot />
+        </div>
         {
           Astro.url.pathname != "/" && (
             <div class="mt-8">
