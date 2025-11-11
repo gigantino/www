@@ -1,6 +1,19 @@
 ---
 import Post from "./Post.astro";
-const posts = import.meta.glob("../pages/blog/*.mdx");
+
+interface PostFrontmatter {
+  title: string;
+  description: string;
+  tags?: string[];
+  pubDate: string;
+}
+
+interface PostModule {
+  url?: string;
+  frontmatter: PostFrontmatter;
+}
+
+const posts = import.meta.glob<PostModule>("../pages/blog/*.mdx");
 const allPosts = await Promise.all(
   Object.values(posts).map((importFn) => importFn())
 );
