@@ -32,7 +32,7 @@ const { title, description, pubDate } = Astro.props.frontmatter || Astro.props;
         Astro.url.pathname != "/" && (
           <div class="mb-8">
             <a href="/">
-              <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent cursor-pointer">
+              <button class="border-border bg-muted hover:bg-accent h-8 cursor-pointer rounded-md border px-3 text-sm font-medium">
                 {"← Homepage"}
               </button>
             </a>
@@ -40,22 +40,32 @@ const { title, description, pubDate } = Astro.props.frontmatter || Astro.props;
         )
       }
       <main class="prose prose-neutral prose-sm">
-        {title && pubDate && Astro.url.pathname.includes('/blog/') && (
-          <>
-            <h1>{title}</h1>
-            <div class="text-sm text-muted-foreground -mt-4 mb-6">
-              {new Date(pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </div>
-          </>
-        )}
-        <div style={Astro.url.pathname.includes('/blog/') ? "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;" : ""}>
+        {
+          title && pubDate && Astro.url.pathname.includes("/blog/") && (
+            <>
+              <h1>{title}</h1>
+              <div class="text-muted-foreground -mt-4 mb-6 text-sm">
+                {new Date(pubDate).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
+            </>
+          )
+        }
+        <div
+          style={Astro.url.pathname.includes("/blog/")
+            ? "font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;"
+            : ""}
+        >
           <slot />
         </div>
         {
           Astro.url.pathname != "/" && (
             <div class="mt-8">
               <a href="/">
-                <button class="h-8 rounded-md border border-border bg-muted px-3 text-sm font-medium hover:bg-accent cursor-pointer">
+                <button class="border-border bg-muted hover:bg-accent h-8 cursor-pointer rounded-md border px-3 text-sm font-medium">
                   {"← Homepage"}
                 </button>
               </a>
@@ -64,5 +74,34 @@ const { title, description, pubDate } = Astro.props.frontmatter || Astro.props;
         }
       </main>
     </div>
+    <audio id="bgMusic" loop>
+      <source src="/nuggone.mp3" type="audio/mpeg" />
+    </audio>
+    <script>
+      const audio = document.getElementById("bgMusic") as HTMLAudioElement;
+
+      // Try to play immediately
+      const playAudio = () => {
+        audio.play().catch(() => {
+          // If autoplay fails, try again on first user interaction
+          const playOnInteraction = () => {
+            audio.play();
+            document.removeEventListener("click", playOnInteraction);
+            document.removeEventListener("keydown", playOnInteraction);
+            document.removeEventListener("touchstart", playOnInteraction);
+          };
+
+          document.addEventListener("click", playOnInteraction);
+          document.addEventListener("keydown", playOnInteraction);
+          document.addEventListener("touchstart", playOnInteraction);
+        });
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", playAudio);
+      } else {
+        playAudio();
+      }
+    </script>
   </body>
 </html>
