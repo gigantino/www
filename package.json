@@ -1,34 +1,43 @@
 {
-  "name": "blog",
-  "type": "module",
-  "version": "0.0.1",
+  "name": "www-2",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "bunx astro dev",
-    "start": "bunx astro dev",
-    "build": "bunx astro build",
-    "preview": "bunx astro preview",
-    "astro": "bunx astro"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.7",
-    "@astrojs/partytown": "^2.1.4",
-    "@astrojs/rss": "^4.0.12",
-    "@astrojs/sitemap": "^3.6.0",
-    "@tailwindcss/vite": "^4.1.14",
-    "@astrojs/vercel": "^8.2.11",
-    "astro": "^5.14.8",
-    "astro-icon": "^1.1.5",
-    "sharp": "^0.34.4",
-    "tailwindcss": "^4.1.15",
-    "zod": "^3.25.76"
+    "@auth/core": "^0.37.0",
+    "@convex-dev/auth": "^0.0.90",
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^16.1.6",
+    "convex": "^1.31.7",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^0.563.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "shiki": "^3.22.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.5",
-    "@tailwindcss/typography": "^0.5.16",
-    "@types/node": "^22.14.0",
-    "prettier": "^3.4.5",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.9",
-    "typescript": "^5.9.3"
-  }
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "ignoreScripts": [
+    "sharp",
+    "unrs-resolver"
+  ],
+  "trustedDependencies": [
+    "sharp",
+    "unrs-resolver"
+  ]
 }

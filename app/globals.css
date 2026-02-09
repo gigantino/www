@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+:root {
+  /* Neobrutalist Design Tokens */
+  --neo-border: 3px solid theme(colors.gray.800);
+  --neo-shadow-offset: 4px;
+  --neo-shadow: var(--neo-shadow-offset) var(--neo-shadow-offset) 0 theme(colors.gray.800);
+  --neo-shadow-hover: 6px 6px 0 theme(colors.gray.800);
+  --neo-radius: 12px;
+  --neo-focus-gap: 10px;
+
+  --background: theme(colors.yellow.50);
+  --foreground: theme(colors.gray.800);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Neobrutalist Card */
+.neo-card {
+  border: var(--neo-border);
+  border-radius: var(--neo-radius);
+  box-shadow: var(--neo-shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.neo-card-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--neo-shadow-hover);
+}
+
+/* Neobrutalist Button */
+.neo-button {
+  border: var(--neo-border);
+  border-radius: var(--neo-radius);
+  box-shadow: var(--neo-shadow);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  background: white;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.neo-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--neo-shadow-hover);
+}
+
+.neo-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 theme(colors.gray.800);
+}
+
+/* Neobrutalist Link */
+.neo-link {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.neo-link:hover {
+  text-decoration-color: theme(colors.gray.800);
+}
+
+/* Focus styles - only show for keyboard navigation */
+*:focus {
+  outline: none !important;
+}
+
+*:focus-visible {
+  outline: 3px dashed theme(colors.gray.800) !important;
+  outline-offset: 3px;
+}
+
+.neo-button:focus-visible,
+.neo-card:focus-visible {
+  outline: none !important;
+  transform: translate(-2px, -2px);
+  box-shadow: var(--neo-shadow-hover);
+}
+
+/* Modal Animations */
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modal-panel-mobile-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-backdrop {
+  animation: modal-backdrop-in 150ms ease-out both;
+}
+
+.modal-panel {
+  animation: modal-panel-mobile-in 200ms ease-out both;
+}
+
+@media (min-width: 640px) {
+  .modal-panel {
+    animation: modal-panel-in 200ms ease-out both;
+  }
+}
