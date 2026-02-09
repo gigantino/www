@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
+import { PostHogProvider } from "./PostHogProvider";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import { Guestbook } from "@/components/Guestbook";
@@ -40,11 +41,13 @@ export default async function RootLayout({
       <body
         className={`${bricolage.variable} ${geistMono.variable} antialiased`}
       >
-        <ConvexClientProvider>
-          {children}
-          <Guestbook initialData={initialGuestbookData} />
-          <Projects />
-        </ConvexClientProvider>
+        <PostHogProvider>
+          <ConvexClientProvider>
+            {children}
+            <Guestbook initialData={initialGuestbookData} />
+            <Projects />
+          </ConvexClientProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
