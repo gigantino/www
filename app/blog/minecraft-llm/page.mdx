@@ -1,0 +1,66 @@
+import Image from "next/image";
+import { CoralChat } from "@/components/CoralChat";
+
+export const metadata = {
+  title: "Building an LLM trained on Minecraft server chat - gigantino",
+  description:
+    "Training a language model on the chaotic chat logs from a Minecraft server.",
+};
+
+# Building an LLM trained on Minecraft server chat
+
+My friends and I have been playing on a server called CoralMC for a while now. To put it lightly, the in-game chat is something else entirely. The kind of stuff people say in there will make you seriously question humanity.
+
+One day, while we were hanging out and watching the chat fly by, we started tossing around the idea of training a language model on it. What began as a casual "what if" quickly snowballed into a real project. We wanted to see if we could build an LLM that captures the way people actually talk on CoralMC.
+
+In this post, I'll go over how we did it and where things currently stand with training.
+
+## How do you actually train an LLM?
+
+Before getting into the specifics of what we did, it's worth briefly covering how language model training works at a high level, especially since I had never done this before.
+
+At its core, training an LLM means feeding a model enormous amounts of text and having it learn to predict what comes next. Given the sentence "I just fell into," the model learns that "lava" is a much more likely next word than "accountant." Do this across millions of messages and the model starts to pick up on patterns. Not just vocabulary, but tone, sentence structure, humor, and the general vibe of how people communicate.
+
+Most LLM projects don't train a model entirely from scratch, though. That would take absurd amounts of data and compute. Instead, you typically start with a pretrained base model, one that already understands language in general, and fine-tune it on your own dataset. Fine-tuning is essentially showing the model enough examples of a specific style of text that it starts to shift its output in that direction.
+
+That was our plan: take an existing model and fine-tune it on CoralMC chat until it started sounding less like a generic assistant and more like a twelve-year-old trash-talking in a Minecraft lobby.
+
+But before any of that could happen, we needed the data.
+
+## The data problem
+
+To train a model, you need data. The first idea was the obvious one: pull our Minecraft client logs. Every player's game client saves a local log of the chat they see while playing, so in theory, we could all pool our logs together and use that as a dataset.
+
+This approach had a major issue, though. Client logs are heavily biased. They only contain messages you personally saw while online, which means most of the data would be conversations involving us or directed at us. The model wouldn't learn how the server talks. It would learn how we talk. On top of that, the best conversations happen in the main lobby at all hours. With just our logs, we'd be missing the vast majority of the interesting data.
+
+So we needed a different approach.
+
+## The data collection bot
+
+The solution we came up with was to build a bot that stays connected to CoralMC 24/7, passively logging every public chat message it sees. It just sits in lobbies and records everything with timestamps and usernames.
+
+The main challenge was reliability. Servers kick idle players, connections drop at random times, and without proper reconnection logic the bot would silently go offline and leave gaps in the data, but it didn't take long for us to have something that managed to stay online reliably.
+
+Once it was up, the data started coming in consistently, which was exactly what we needed.
+
+## The dashboard
+
+While we had this bot running, we figured we might as well make it fun. We built a small web dashboard that gave us a live view of the server chat as the bot was seeing it.
+
+We also added the ability to type messages as the bot and move it around the server to different lobbies and game modes, all from the dashboard. It was basically a remote control for a Minecraft account.
+
+<Image
+  src="/blog/minecraft-llm/dashboard.jpeg"
+  alt="Bot dashboard showing live server chat"
+  width={800}
+  height={450}
+  className="my-6 w-full rounded-lg border-3 border-[var(--color-black)] shadow-[4px_4px_0_var(--color-black)]"
+/>
+
+None of this was strictly necessary for the LLM project, but it made the whole process of monitoring data collection a lot more engaging.
+
+## Try it out!
+
+A first version of the model is already live. Feel free to try it out.
+
+<CoralChat />

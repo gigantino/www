@@ -1,45 +1,38 @@
-import Link from "next/link";
-import { Newsletter } from "@/components/Newsletter";
-import { ProfilePicture } from "@/components/ProfilePicture";
-import { SocialLinks } from "@/components/SocialLinks";
-import { ArrowLeft } from "lucide-react";
+import { cookies } from "next/headers";
+import { BlogShell } from "@/components/BlogShell";
 
-export default function BlogLayout({
+export type Theme = "light" | "dark" | "device";
+
+// Inline script that resolves "device" theme before React hydrates to prevent
+// a flash of incorrect theme. Runs synchronously before first paint.
+// See: rendering-hydration-no-flicker best practice.
+const themeScript = `
+(function(){
+  try {
+    var t = document.cookie.match(/blog-theme=(light|dark)/);
+    var theme = t ? t[1] : null;
+    var dark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var el = document.getElementById('blog-root');
+    if (dark && el) {
+      el.classList.add('dark');
+      el.classList.replace('bg-white','bg-neutral-950');
+    }
+  } catch(e){}
+})();
+`;
+
+export default async function BlogLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = await cookies();
+  const initialTheme = (cookieStore.get("blog-theme")?.value as Theme) || "device";
+
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <div className="mx-auto max-w-2xl px-4 pt-4">
-        <nav className="neo-card sticky top-4 z-10 flex items-center justify-between rounded-xl bg-sky-100 px-4 py-2">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-lg font-bold tracking-tight text-gray-800"
-          >
-            <ProfilePicture size="sm" />
-            ggtn.ch
-          </Link>
-          <div className="flex items-center gap-3">
-            <SocialLinks />
-          </div>
-        </nav>
-      </div>
-      <div className="mx-auto max-w-2xl px-4 py-12 md:py-16">
-        <article>{children}</article>
-        <footer className="mt-16 border-t border-gray-200 pt-10">
-          <Newsletter />
-          <div className="mt-8">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-gray-900"
-            >
-              <ArrowLeft size={16} />
-              Back to homepage
-            </Link>
-          </div>
-        </footer>
-      </div>
-    </div>
+    <>
+      <BlogShell initialTheme={initialTheme}>{children}</BlogShell>
+      <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+    </>
   );
 }

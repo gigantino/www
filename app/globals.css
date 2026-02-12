@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --neo-border: 3px solid theme(colors.gray.800);
   --neo-shadow-offset: 4px;
@@ -23,6 +25,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+body.blog-dark {
+  background: #0a0a0a;
+}
+
+body.blog-light {
+  background: #ffffff;
 }
 
 .neo-card {
@@ -93,6 +103,11 @@ body {
   box-shadow: var(--neo-shadow-hover);
 }
 
+.dark .neo-button:focus-visible,
+.dark .neo-card:focus-visible {
+  box-shadow: 6px 6px 0 theme(colors.gray.700);
+}
+
 @keyframes modal-backdrop-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -141,3 +156,90 @@ body {
     animation: modal-panel-in 200ms ease-out both;
   }
 }
+
+/* Geist font for article body text (not headings) */
+article p,
+article li,
+article blockquote,
+article time {
+  font-family: var(--font-geist), system-ui, sans-serif;
+}
+
+/* Dark mode overrides for MDX prose content */
+.dark article h1 {
+  color: theme(colors.gray.100);
+}
+
+.dark article h2 {
+  color: theme(colors.gray.200);
+}
+
+.dark article h3 {
+  color: theme(colors.gray.300);
+}
+
+.dark article p,
+.dark article li {
+  color: theme(colors.gray.300);
+}
+
+.dark article ul,
+.dark article ol {
+  color: theme(colors.gray.300);
+}
+
+.dark article a {
+  color: theme(colors.gray.400);
+}
+
+.dark article a:hover {
+  color: theme(colors.gray.200);
+}
+
+.dark article blockquote {
+  border-color: theme(colors.gray.600);
+  color: theme(colors.gray.400);
+}
+
+.dark article code {
+  background: theme(colors.gray.800);
+  color: theme(colors.gray.300);
+}
+
+.dark article strong {
+  color: theme(colors.gray.200);
+}
+
+.dark article em {
+  color: inherit;
+}
+
+.dark article img {
+  opacity: 0.9;
+}
+
+/* Dark mode overrides for neo-card/neo-button inside blog */
+.dark .neo-card {
+  border-color: theme(colors.gray.600);
+  box-shadow: 4px 4px 0 theme(colors.gray.700);
+}
+
+.dark .neo-button {
+  border-color: theme(colors.gray.600);
+  box-shadow: 4px 4px 0 theme(colors.gray.700);
+  background: theme(colors.gray.700);
+  color: theme(colors.gray.200);
+}
+
+.dark .neo-card-hover:hover {
+  box-shadow: 6px 6px 0 theme(colors.gray.700);
+}
+
+.dark .neo-button:hover {
+  box-shadow: 6px 6px 0 theme(colors.gray.700);
+}
+
+.dark .neo-button:active {
+  box-shadow: 1px 1px 0 theme(colors.gray.700);
+}
+

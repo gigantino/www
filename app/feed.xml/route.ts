@@ -4,16 +4,19 @@ const SITE_URL = process.env.SITE_URL || "https://ggtn.ch";
 
 export function GET() {
   const items = blogPosts
-    .map((post) => {
-      const url = `${SITE_URL}${post.url}`;
-      return `    <item>
+    .reduce<string[]>((acc, post) => {
+      if (!post.wip) {
+        const url = `${SITE_URL}${post.url}`;
+        acc.push(`    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${url}</link>
       <guid>${url}</guid>
       <description>${escapeXml(post.description)}</description>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-    </item>`;
-    })
+    </item>`);
+      }
+      return acc;
+    }, [])
     .join("\n");
 
   const feed = `<?xml version="1.0" encoding="UTF-8"?>

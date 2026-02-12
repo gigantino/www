@@ -21,7 +21,7 @@ export function SocialLinks({ showLabels = false }: { showLabels?: boolean }) {
             className={
               showLabels
                 ? "neo-link flex items-center gap-1.5 text-gray-800"
-                : "text-gray-800 transition-colors hover:text-gray-600"
+                : "text-gray-800 transition-colors hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300"
             }
           >
             <Icon size={20} />

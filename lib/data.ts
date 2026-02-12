@@ -21,12 +21,38 @@ export const socialLinks = [
 
 export const blogPosts = [
   {
-    title: "Hello World",
+    title: "Building an LLM trained on Minecraft server chat",
     description:
-      "Welcome to my new blog. More posts coming soon.",
-    date: "2026-02-09",
-    url: "/blog/hello-world",
-    tags: ["General"],
+      "Training a language model on the chaotic chat logs from a Minecraft server.",
+    date: "2026-02-06",
+    url: "/blog/minecraft-llm",
+    tags: ["AI", "Dynamic article"],
+    wip: true,
+  },
+  {
+    title: "How We Got Free Chicken for a Year by Reverse Engineering a Mobile Game",
+    description:
+      "Reverse engineering a fast-food company's in-app minigame to win free food for an entire year.",
+    date: "2026-01-13",
+    url: "/blog/chicken-exploit",
+    tags: ["Security", "Reverse Engineering"],
+  },
+  {
+    title: "How I made an AI-generated show",
+    description:
+      "Building AI-generated conversations using ChatGPT and text-to-speech APIs.",
+    date: "2023-10-17",
+    url: "/blog/ai-generated-show",
+    image: "/blog/ai-generated-show/ai_sponge.png",
+    tags: ["Case Study", "AI"],
+  },
+  {
+    title: "Automating lighthouse reports with Unlighthouse",
+    description:
+      "CI/CD integration with GitHub Actions for automated Lighthouse reporting.",
+    date: "2023-10-10",
+    url: "/blog/unlighthouse",
+    tags: ["CI/CD", "Performance"],
   },
 ];
 
