@@ -1,12 +1,24 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { PostHogProvider } from "./PostHogProvider";
+import { ThemeProvider, type Theme } from "@/components/ThemeProvider";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+
+const themeScript = `
+(function(){
+  try {
+    var t = document.cookie.match(/(?:blog-)?theme=(light|dark)/);
+    var dark = (t && t[1]==='dark') || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
+    if(dark) document.documentElement.classList.add('dark');
+  } catch(e){}
+})();
+`;
 
 const Guestbook = dynamic(() =>
   import("@/components/Guestbook").then((m) => m.Guestbook)
@@ -73,13 +85,22 @@ async function GuestbookLoader() {
   return <Guestbook initialData={data} />;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialTheme =
+    (cookieStore.get("theme")?.value as Theme) ||
+    (cookieStore.get("blog-theme")?.value as Theme) ||
+    "device";
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body
         className={`${bricolage.variable} ${geist.variable} ${geistMono.variable} antialiased`}
       >
@@ -103,11 +124,13 @@ export default function RootLayout({
         />
         <PostHogProvider>
           <ConvexClientProvider>
-            {children}
-            <Suspense fallback={null}>
-              <GuestbookLoader />
-            </Suspense>
-            <Projects />
+            <ThemeProvider initialTheme={initialTheme}>
+              {children}
+              <Suspense fallback={null}>
+                <GuestbookLoader />
+              </Suspense>
+              <Projects />
+            </ThemeProvider>
           </ConvexClientProvider>
         </PostHogProvider>
       </body>

@@ -44,7 +44,7 @@ export function ProfilePicture({ size = "lg" }: { size?: "sm" | "lg" }) {
         </defs>
         <path
           d={flowerPath}
-          className="fill-violet-200 stroke-gray-800"
+          className="fill-violet-200 dark:fill-violet-900 stroke-gray-800 dark:stroke-gray-600"
           strokeWidth="3"
           filter={`url(#flower-shadow-${id})`}
         />

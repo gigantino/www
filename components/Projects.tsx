@@ -21,7 +21,7 @@ function ProjectLinks({
           href={website}
           target="_blank"
           rel="noopener noreferrer"
-          className="neo-link flex items-center gap-1 text-gray-600 hover:text-gray-800"
+          className="neo-link flex items-center gap-1 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
         >
           <Globe size={14} />
           Website
@@ -32,7 +32,7 @@ function ProjectLinks({
           href={github}
           target="_blank"
           rel="noopener noreferrer"
-          className="neo-link flex items-center gap-1 text-gray-600 hover:text-gray-800"
+          className="neo-link flex items-center gap-1 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
         >
           <Github size={14} />
           GitHub
@@ -60,13 +60,13 @@ export function Projects() {
       onClose={() => setIsOpen(false)}
       title="Projects"
       icon={<FolderOpen className="size-5" />}
-      className="bg-green-100"
+      className="bg-green-100 dark:bg-gray-800"
     >
       <ul className="flex flex-col gap-4">
         {pinnedProjects.map((project) => (
           <li
             key={project.name}
-            className="neo-card flex flex-col gap-1 bg-white p-4"
+            className="neo-card flex flex-col gap-1 bg-white dark:bg-gray-700 p-4"
           >
             <div className="flex items-center gap-2">
               {project.icon && (
@@ -78,10 +78,10 @@ export function Projects() {
                   className="size-6 rounded-full"
                 />
               )}
-              <h3 className="font-bold">{project.name}</h3>
+              <h3 className="font-bold dark:text-gray-100">{project.name}</h3>
               <Pin size={14} className="inline-block text-gray-400" />
             </div>
-            <p className="text-sm text-gray-600">{project.description}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
             <ProjectLinks website={project.website} github={project.github} />
           </li>
         ))}
@@ -91,8 +91,8 @@ export function Projects() {
         <ul className="mt-6 flex flex-col gap-4">
           {nonPinnedProjects.map((project) => (
             <li key={project.name} className="flex flex-col gap-1">
-              <h3 className="font-medium">{project.name}</h3>
-              <p className="text-sm text-gray-600">{project.description}</p>
+              <h3 className="font-medium dark:text-gray-100">{project.name}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
               <ProjectLinks
                 website={project.website}
                 github={project.github}

@@ -14,7 +14,7 @@ export function ProjectsButton({ className = "" }: ProjectsButtonProps) {
   return (
     <button
       onClick={handleClick}
-      className={`neo-button flex items-center gap-2 bg-green-100 px-4 py-2 font-medium ${className}`}
+      className={`neo-button flex items-center gap-2 bg-green-100 dark:bg-green-900/40 dark:text-gray-100 px-4 py-2 font-medium ${className}`}
     >
       <FolderOpen size={18} />
       Projects

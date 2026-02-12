@@ -10,6 +10,7 @@
   --neo-radius: 12px;
   --neo-focus-gap: 10px;
 
+  --neo-cream: theme(colors.yellow.50);
   --background: theme(colors.yellow.50);
   --foreground: theme(colors.gray.800);
 }
@@ -33,6 +34,14 @@ body.blog-dark {
 
 body.blog-light {
   background: #ffffff;
+}
+
+body.home-dark {
+  background: theme(colors.gray.950);
+}
+
+body.home-light {
+  background: theme(colors.yellow.50);
 }
 
 .neo-card {
@@ -79,6 +88,14 @@ body.blog-light {
   text-decoration-color: theme(colors.gray.800);
 }
 
+.dark .neo-link {
+  color: theme(colors.gray.300);
+}
+
+.dark .neo-link:hover {
+  color: theme(colors.gray.100);
+}
+
 @supports (-webkit-touch-callout: none) {
   input,
   textarea,
@@ -94,6 +111,10 @@ body.blog-light {
 *:focus-visible {
   outline: 3px dashed theme(colors.gray.800) !important;
   outline-offset: 3px;
+}
+
+.dark *:focus-visible {
+  outline-color: theme(colors.gray.400) !important;
 }
 
 .neo-button:focus-visible,
@@ -216,6 +237,11 @@ article time {
 
 .dark article img {
   opacity: 0.9;
+}
+
+/* Dark mode SVG shadow override for profile picture flower */
+.dark [id^="flower-shadow"] feDropShadow {
+  flood-color: theme(colors.gray.700);
 }
 
 /* Dark mode overrides for neo-card/neo-button inside blog */

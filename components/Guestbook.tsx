@@ -138,10 +138,10 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
       onClose={() => setIsOpen(false)}
       title="Guestbook"
       icon={<BookOpen className="size-5" />}
-      className="bg-amber-100"
+      className="bg-amber-100 dark:bg-gray-800"
     >
       {currentUser === undefined ? (
-        <div className="text-sm text-gray-500">Loading...</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">Loading...</div>
       ) : currentUser === null ? (
         <button
           onClick={handleSignIn}
@@ -164,11 +164,11 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
                 />
               )}
               <div>
-                <span className="text-sm font-medium">
+                <span className="text-sm font-medium dark:text-gray-100">
                   {currentUser.name}
                 </span>
                 {currentUser.githubUsername && (
-                  <span className="text-xs text-gray-500 ml-1">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
                     @{currentUser.githubUsername}
                   </span>
                 )}
@@ -176,7 +176,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
             </div>
             <button
               onClick={handleSignOut}
-              className="shrink-0 text-xs text-gray-500 underline hover:text-gray-700"
+              className="shrink-0 text-xs text-gray-500 dark:text-gray-400 underline hover:text-gray-700 dark:hover:text-gray-200"
             >
               Sign out
             </button>
@@ -202,14 +202,14 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
                   placeholder="Leave a message..."
                   rows={3}
                   required
-                  className="neo-card w-full resize-none bg-white px-3 py-2 text-sm outline-none"
+                  className="neo-card w-full resize-none bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm outline-none"
                 />
-                <span className="absolute bottom-2 right-3 text-xs text-gray-400">
+                <span className="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-500">
                   {message.length}/200
                 </span>
               </div>
               {error && (
-                <p className="text-sm text-red-600">{error}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               )}
               <button
                 type="submit"
@@ -234,13 +234,13 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
 
       <div ref={entriesRef} className="flex flex-col gap-3 pt-4">
         {guestbookData.entries.length === 0 ? (
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
             No entries yet. Be the first to sign!
           </div>
         ) : (
           <>
             {guestbookData.entries.map((entry) => (
-              <div key={entry._id} className="neo-card bg-white p-3">
+              <div key={entry._id} className="neo-card bg-white dark:bg-gray-700 p-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {entry.image && (
@@ -249,7 +249,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
                         alt={entry.name}
                         width={24}
                         height={24}
-                        className="rounded-full border-2 border-gray-800"
+                        className="rounded-full border-2 border-gray-800 dark:border-gray-600"
                       />
                     )}
                     {entry.githubUsername ? (
@@ -257,19 +257,19 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
                         href={`https://github.com/${entry.githubUsername}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-sm hover:underline"
+                        className="font-medium text-sm hover:underline dark:text-gray-100"
                       >
                         {entry.name}
                       </a>
                     ) : (
-                      <span className="font-medium text-sm">{entry.name}</span>
+                      <span className="font-medium text-sm dark:text-gray-100">{entry.name}</span>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                     {formatDate(entry._creationTime)}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-gray-700">{entry.message}</p>
+                <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{entry.message}</p>
               </div>
             ))}
             {guestbookData.totalPages > 1 && (

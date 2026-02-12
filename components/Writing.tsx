@@ -6,12 +6,12 @@ import { BentoCard } from "./ui/BentoCard";
 import { Rss, PenLine, Check, X } from "lucide-react";
 
 const tagColors = [
-  "bg-yellow-100",
-  "bg-pink-100",
-  "bg-green-100",
-  "bg-orange-100",
-  "bg-violet-100",
-  "bg-emerald-100",
+  "bg-yellow-100 dark:bg-yellow-900/40",
+  "bg-pink-100 dark:bg-pink-900/40",
+  "bg-green-100 dark:bg-green-900/40",
+  "bg-orange-100 dark:bg-orange-900/40",
+  "bg-violet-100 dark:bg-violet-900/40",
+  "bg-emerald-100 dark:bg-emerald-900/40",
 ];
 
 const hasWipPosts = blogPosts.some((post) => post.wip);
@@ -23,13 +23,13 @@ export function Writing() {
   const wipPosts = blogPosts.filter((post) => post.wip);
 
   return (
-    <BentoCard id="writing" className="flex flex-col gap-4 bg-sky-100">
-      <h2 className="text-xl font-bold flex items-center gap-2"><PenLine className="size-5" /> Writing</h2>
+    <BentoCard id="writing" className="flex flex-col gap-4 bg-sky-100 dark:bg-sky-950/50">
+      <h2 className="text-xl font-bold flex items-center gap-2 dark:text-gray-100"><PenLine className="size-5" /> Writing</h2>
       <ul className="flex flex-col gap-5">
         {publishedPosts.map((post) => (
           <li key={post.url}>
             <a href={post.url} className="group flex flex-col gap-1">
-                <span className="neo-link font-medium group-hover:text-gray-800">
+                <span className="neo-link font-medium group-hover:text-gray-800 dark:text-gray-200 dark:group-hover:text-gray-100">
                   {post.title}
                 </span>
                 {post.tags && post.tags.length > 0 && (
@@ -37,7 +37,7 @@ export function Writing() {
                     {post.tags.map((tag, index) => (
                       <span
                         key={tag}
-                        className={`inline-block border-2 border-gray-800 px-2 py-0.5 text-xs font-medium ${tagColors[index % tagColors.length]}`}
+                        className={`inline-block border-2 border-gray-800 dark:border-gray-600 dark:text-gray-200 px-2 py-0.5 text-xs font-medium ${tagColors[index % tagColors.length]}`}
                       >
                         {tag}
                       </span>
@@ -45,11 +45,11 @@ export function Writing() {
                   </div>
                 )}
                 {post.description && (
-                  <p className="line-clamp-2 text-base text-gray-600">
+                  <p className="line-clamp-2 text-base text-gray-600 dark:text-gray-400">
                     {post.description}
                   </p>
                 )}
-                <time className="text-base text-gray-500">
+                <time className="text-base text-gray-500 dark:text-gray-500">
                   {new Date(post.date).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -63,17 +63,17 @@ export function Writing() {
       {showWip && wipPosts.length > 0 && (
         <>
           <div className="flex items-center gap-3">
-            <div className="h-0.5 flex-1 bg-gray-800/20" />
+            <div className="h-0.5 flex-1 bg-gray-800/20 dark:bg-gray-400/20" />
             <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Work in Progress</span>
-            <div className="h-0.5 flex-1 bg-gray-800/20" />
+            <div className="h-0.5 flex-1 bg-gray-800/20 dark:bg-gray-400/20" />
           </div>
           <ul className="flex flex-col gap-5">
             {wipPosts.map((post) => (
               <li key={post.url}>
                 <a href={post.url} className="group flex flex-col gap-1">
-                    <span className="neo-link font-medium group-hover:text-gray-800">
+                    <span className="neo-link font-medium group-hover:text-gray-800 dark:text-gray-200 dark:group-hover:text-gray-100">
                       {post.title}
-                      <span className="ml-2 inline-block border-2 border-gray-800 bg-amber-100 px-2 py-0.5 text-xs font-medium align-middle">
+                      <span className="ml-2 inline-block border-2 border-gray-800 dark:border-gray-600 bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium align-middle">
                         WIP
                       </span>
                     </span>
@@ -82,7 +82,7 @@ export function Writing() {
                         {post.tags.map((tag, index) => (
                           <span
                             key={tag}
-                            className={`inline-block border-2 border-gray-800 px-2 py-0.5 text-xs font-medium ${tagColors[index % tagColors.length]}`}
+                            className={`inline-block border-2 border-gray-800 dark:border-gray-600 dark:text-gray-200 px-2 py-0.5 text-xs font-medium ${tagColors[index % tagColors.length]}`}
                           >
                             {tag}
                           </span>
@@ -90,7 +90,7 @@ export function Writing() {
                       </div>
                     )}
                     {post.description && (
-                      <p className="line-clamp-2 text-base text-gray-600">
+                      <p className="line-clamp-2 text-base text-gray-600 dark:text-gray-400">
                         {post.description}
                       </p>
                     )}
@@ -101,7 +101,7 @@ export function Writing() {
         </>
       )}
       <div className="flex items-center gap-4">
-        <a href="/feed.xml" className="neo-link text-base text-gray-600 flex items-center gap-1">
+        <a href="/feed.xml" className="neo-link text-base text-gray-600 dark:text-gray-400 flex items-center gap-1">
           <Rss size={14} />
           RSS Feed
         </a>
@@ -114,11 +114,11 @@ export function Writing() {
                 onChange={(e) => setShowWip(e.target.checked)}
                 className="peer sr-only"
               />
-              <span className="flex h-4 w-4 items-center justify-center border-2 border-gray-800 bg-white shadow-[2px_2px_0_0_theme(colors.gray.800)] transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-gray-800 peer-focus-visible:ring-offset-2 peer-active:translate-x-[1px] peer-active:translate-y-[1px] peer-active:shadow-[1px_1px_0_0_theme(colors.gray.800)]">
+              <span className="flex h-4 w-4 items-center justify-center border-2 border-gray-800 dark:border-gray-600 bg-white dark:bg-gray-700 shadow-[2px_2px_0_0_theme(colors.gray.800)] dark:shadow-[2px_2px_0_0_theme(colors.gray.700)] transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-gray-800 peer-focus-visible:ring-offset-2 peer-active:translate-x-[1px] peer-active:translate-y-[1px] peer-active:shadow-[1px_1px_0_0_theme(colors.gray.800)]">
                 {showWip ? (
-                  <Check className="h-3 w-3 text-gray-800" strokeWidth={3} />
+                  <Check className="h-3 w-3 text-gray-800 dark:text-gray-200" strokeWidth={3} />
                 ) : (
-                  <X className="h-3 w-3 text-gray-800" strokeWidth={3} />
+                  <X className="h-3 w-3 text-gray-800 dark:text-gray-200" strokeWidth={3} />
                 )}
               </span>
             </span>
