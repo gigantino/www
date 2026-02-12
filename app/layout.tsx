@@ -31,9 +31,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "gigantino - Full-stack developer",
+  metadataBase: new URL("https://ggtn.ch"),
+  title: {
+    default: "Hello! - ggtn.ch",
+    template: "%s - ggtn.ch",
+  },
   description:
     "Personal portfolio of gigantino, a full-stack developer based in Geneva, Switzerland.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "ggtn.ch",
+    url: "https://ggtn.ch",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  alternates: {
+    canonical: "https://ggtn.ch",
+    types: {
+      "application/rss+xml": "/rss.xml",
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 async function GuestbookLoader() {
@@ -60,6 +83,24 @@ export default function RootLayout({
       <body
         className={`${bricolage.variable} ${geist.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "gigantino",
+              url: "https://ggtn.ch",
+              jobTitle: "Full-stack developer",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Geneva",
+                addressCountry: "CH",
+              },
+              sameAs: ["https://github.com/gigantino"],
+            }),
+          }}
+        />
         <PostHogProvider>
           <ConvexClientProvider>
             {children}

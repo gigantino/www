@@ -9,6 +9,7 @@ import { WipBanner } from "@/components/WipBanner";
 import { ArticleMeta } from "@/components/ArticleMeta";
 import { RecentArticles } from "@/components/RecentArticles";
 import { ArrowLeft, Sun, Moon, Monitor } from "lucide-react";
+import { BlogJsonLd } from "@/components/BlogJsonLd";
 import type { Theme } from "@/app/blog/layout";
 
 function useSystemDark() {
@@ -107,6 +108,7 @@ export function BlogShell({
           </div>
         </nav>
       </div>
+      <BlogJsonLd />
       <div className="mx-auto max-w-2xl px-4 py-12 md:py-16">
         <article>
           <WipBanner />
