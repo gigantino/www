@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
   type ReactNode,
@@ -58,20 +59,25 @@ export function ThemeProvider({
   const systemDark = useSystemDark();
   const isDark = theme === "dark" || (theme === "device" && systemDark);
 
+  const prevIsDark = useRef(isDark);
   useEffect(() => {
+    if (prevIsDark.current === isDark) return;
+    prevIsDark.current = isDark;
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
 
   const cycleTheme = useCallback(() => {
-    setTheme((curr) => {
-      const order: Theme[] = systemDark
-        ? ["device", "light", "dark"]
-        : ["device", "dark", "light"];
-      const next = order[(order.indexOf(curr) + 1) % order.length];
-      setThemeCookie(next);
-      return next;
-    });
-  }, [systemDark]);
+    const order: Theme[] = systemDark
+      ? ["device", "light", "dark"]
+      : ["device", "dark", "light"];
+    const next = order[(order.indexOf(theme) + 1) % order.length];
+    const nextIsDark = next === "dark" || (next === "device" && systemDark);
+
+    setTheme(next);
+    setThemeCookie(next);
+    document.documentElement.classList.toggle("dark", nextIsDark);
+    prevIsDark.current = nextIsDark;
+  }, [theme, systemDark]);
 
   const value = useMemo(
     () => ({ theme, isDark, cycleTheme }),

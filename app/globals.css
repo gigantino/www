@@ -15,6 +15,11 @@
   --foreground: theme(colors.gray.800);
 }
 
+.dark {
+  --background: theme(colors.gray.950);
+  --foreground: theme(colors.gray.100);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -28,20 +33,20 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-body.blog-dark {
-  background: #0a0a0a;
-}
-
-body.blog-light {
-  background: #ffffff;
-}
-
 body.home-dark {
   background: theme(colors.gray.950);
 }
 
 body.home-light {
   background: theme(colors.yellow.50);
+}
+
+body.blog-dark {
+  background: #0a0a0a;
+}
+
+body.blog-light {
+  background: #ffffff;
 }
 
 .neo-card {

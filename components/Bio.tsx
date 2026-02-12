@@ -8,7 +8,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Bio({ initialGuestbookCount }: { initialGuestbookCount: number }) {
   return (
-    <BentoCard id="bio" className="relative flex flex-col gap-3 bg-yellow-100 dark:bg-yellow-950/50">
+    <BentoCard id="bio" className="relative flex flex-col gap-3 bg-yellow-100 dark:bg-gray-800">
       <ThemeToggle className="absolute top-4 right-4 bg-white" />
       <div className="flex flex-col items-start gap-2">
         <ProfilePicture />

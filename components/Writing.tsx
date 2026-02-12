@@ -23,7 +23,7 @@ export function Writing() {
   const wipPosts = blogPosts.filter((post) => post.wip);
 
   return (
-    <BentoCard id="writing" className="flex flex-col gap-4 bg-sky-100 dark:bg-sky-950/50">
+    <BentoCard id="writing" className="flex flex-col gap-4 bg-sky-100 dark:bg-gray-800">
       <h2 className="text-xl font-bold flex items-center gap-2 dark:text-gray-100"><PenLine className="size-5" /> Writing</h2>
       <ul className="flex flex-col gap-5">
         {publishedPosts.map((post) => (
@@ -106,7 +106,7 @@ export function Writing() {
           RSS Feed
         </a>
         {hasWipPosts && (
-          <label className="flex items-center gap-1.5 text-sm text-gray-500 cursor-pointer select-none">
+          <label className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-100 cursor-pointer select-none">
             <span className="relative inline-flex items-center justify-center">
               <input
                 type="checkbox"

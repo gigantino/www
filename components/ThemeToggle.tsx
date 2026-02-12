@@ -24,7 +24,8 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       onClick={cycleTheme}
       aria-label={themeLabels[theme]}
       title={themeLabels[theme]}
-      className={`cursor-pointer rounded-xl border-2 border-gray-800 p-1.5 shadow-[2px_2px_0_theme(colors.gray.800)] transition-transform hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_theme(colors.gray.800)] dark:border-gray-500 dark:shadow-[2px_2px_0_theme(colors.gray.600)] dark:bg-gray-700 dark:text-gray-100 ${className}`}
+      className={`neo-button ${className}`}
+      style={{ width: 36, height: 36, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
     >
       <Icon size={18} />
     </button>

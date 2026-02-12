@@ -13,9 +13,9 @@ import { Suspense } from "react";
 const themeScript = `
 (function(){
   try {
-    var t = document.cookie.match(/(?:blog-)?theme=(light|dark)/);
+    var t = document.cookie.match(/(?:^|; )theme=(light|dark)/);
     var dark = (t && t[1]==='dark') || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
-    if(dark) document.documentElement.classList.add('dark');
+    document.documentElement.classList.toggle('dark', dark);
   } catch(e){}
 })();
 `;
@@ -92,12 +92,10 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const initialTheme =
-    (cookieStore.get("theme")?.value as Theme) ||
-    (cookieStore.get("blog-theme")?.value as Theme) ||
-    "device";
+    (cookieStore.get("theme")?.value as Theme) || "device";
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={initialTheme === "dark" ? "dark" : undefined} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
