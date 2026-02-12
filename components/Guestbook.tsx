@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "../convex/_generated/api";
 import Image from "next/image";
@@ -51,6 +51,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
   const entriesRef = useRef<HTMLDivElement>(null);
 
   const { signIn, signOut } = useAuthActions();
+  const { isLoading: isAuthLoading, isAuthenticated } = useConvexAuth();
   const currentUser = useQuery(api.guestbook.currentUser);
   const myEntry = useQuery(api.guestbook.myEntry);
   const guestbookDataLive = useQuery(api.guestbook.list, { page, pageSize: 5 });
@@ -140,9 +141,9 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
       icon={<BookOpen className="size-5" />}
       className="bg-amber-100 dark:bg-gray-800"
     >
-      {currentUser === undefined ? (
+      {isAuthLoading || (isAuthenticated && !currentUser) ? (
         <div className="text-sm text-gray-500 dark:text-gray-400">Loading...</div>
-      ) : currentUser === null ? (
+      ) : !isAuthenticated ? (
         <button
           onClick={handleSignIn}
           className="neo-button !bg-gray-800 !text-white text-sm flex w-full items-center justify-center gap-2"
@@ -150,7 +151,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
           <Github size={16} />
           Sign in with GitHub
         </button>
-      ) : (
+      ) : currentUser ? (
         <>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -230,7 +231,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
             </form>
           )}
         </>
-      )}
+      ) : null}
 
       <div ref={entriesRef} className="flex flex-col gap-3 pt-4">
         {guestbookData.entries.length === 0 ? (
