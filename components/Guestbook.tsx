@@ -68,6 +68,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("guestbook") === "1") {
+      sessionStorage.setItem("guestbook-open", "1");
       setPage(1);
       setIsOpen(true);
       params.delete("guestbook");
@@ -76,6 +77,9 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
         (params.toString() ? `?${params}` : "") +
         window.location.hash;
       window.history.replaceState({}, "", newUrl);
+    } else if (sessionStorage.getItem("guestbook-open") === "1") {
+      setPage(1);
+      setIsOpen(true);
     }
   }, []);
 
@@ -136,7 +140,10 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
   return (
     <Modal
       isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={() => {
+        sessionStorage.removeItem("guestbook-open");
+        setIsOpen(false);
+      }}
       title="Guestbook"
       icon={<BookOpen className="size-5" />}
       className="bg-amber-100 dark:bg-gray-800"
