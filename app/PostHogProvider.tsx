@@ -27,9 +27,12 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const [client, setClient] = useState<PostHog | null>(null);
 
   useEffect(() => {
+    const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    if (!key) return;
+
     import("posthog-js").then((mod) => {
       const posthog = mod.default;
-      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+      posthog.init(key, {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
         capture_pageview: false,
         capture_pageleave: true,

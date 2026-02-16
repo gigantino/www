@@ -3,6 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
   --neo-border: 3px solid theme(colors.gray.800);
   --neo-shadow-offset: 4px;
   --neo-shadow: var(--neo-shadow-offset) var(--neo-shadow-offset) 0 theme(colors.gray.800);
@@ -16,6 +17,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: theme(colors.gray.950);
   --foreground: theme(colors.gray.100);
 }
@@ -31,14 +33,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-}
-
-body.home-dark {
-  background: theme(colors.gray.950);
-}
-
-body.home-light {
-  background: theme(colors.yellow.50);
 }
 
 body.blog-dark {

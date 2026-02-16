@@ -64,6 +64,7 @@ export function ThemeProvider({
     if (prevIsDark.current === isDark) return;
     prevIsDark.current = isDark;
     document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.style.colorScheme = isDark ? "dark" : "light";
   }, [isDark]);
 
   const cycleTheme = useCallback(() => {
@@ -76,6 +77,7 @@ export function ThemeProvider({
     setTheme(next);
     setThemeCookie(next);
     document.documentElement.classList.toggle("dark", nextIsDark);
+    document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light";
     prevIsDark.current = nextIsDark;
   }, [theme, systemDark]);
 

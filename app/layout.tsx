@@ -15,7 +15,9 @@ const themeScript = `
   try {
     var t = document.cookie.match(/(?:^|; )theme=(light|dark)/);
     var dark = (t && t[1]==='dark') || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
-    document.documentElement.classList.toggle('dark', dark);
+    var el = document.documentElement;
+    el.classList.toggle('dark', dark);
+    el.style.colorScheme = dark ? 'dark' : 'light';
   } catch(e){}
 })();
 `;
@@ -95,7 +97,7 @@ export default async function RootLayout({
     (cookieStore.get("theme")?.value as Theme) || "device";
 
   return (
-    <html lang="en" className={initialTheme === "dark" ? "dark" : undefined} suppressHydrationWarning>
+    <html lang="en" className={initialTheme === "dark" ? "dark" : undefined} style={{ colorScheme: initialTheme === "dark" ? "dark" : "light" }} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
