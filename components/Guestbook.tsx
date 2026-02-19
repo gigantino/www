@@ -7,7 +7,7 @@ import { api } from "../convex/_generated/api";
 import Image from "next/image";
 import { Modal } from "@/components/ui/Modal";
 import { PaginationControls } from "@/components/ui/PaginationControls";
-import { Github, Pencil, BookOpen } from "lucide-react";
+import { Github, Pencil, BookOpen, Trash2 } from "lucide-react";
 
 function formatDate(timestamp: number) {
   return new Date(timestamp).toLocaleDateString("en-US", {
@@ -46,6 +46,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
   const [page, setPage] = useState(1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const entriesRef = useRef<HTMLDivElement>(null);
@@ -61,6 +62,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
   }
   const guestbookData = guestbookDataLive ?? prevDataRef.current;
   const sign = useMutation(api.guestbook.sign);
+  const remove = useMutation(api.guestbook.remove);
 
   const isEditing = myEntry !== null && myEntry !== undefined;
   const messageChanged = !isEditing || message !== myEntry?.message;
@@ -132,6 +134,20 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleRemove = async () => {
+    if (!confirm("Remove your guestbook entry?")) return;
+    setIsRemoving(true);
+    try {
+      await remove();
+      setMessage("");
+      initializedRef.current = false;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setIsRemoving(false);
     }
   };
 
@@ -219,22 +235,35 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
               {error && (
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               )}
-              <button
-                type="submit"
-                disabled={isSubmitting || message.trim().length === 0 || !messageChanged}
-                className="neo-button self-start bg-lime-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-              >
-                {isSubmitting ? (
-                  "Saving..."
-                ) : isEditing ? (
-                  <>
-                    <Pencil size={14} />
-                    Edit Message
-                  </>
-                ) : (
-                  "Sign Guestbook"
+              <div className="flex items-center gap-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting || message.trim().length === 0 || !messageChanged}
+                  className="neo-button bg-lime-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                >
+                  {isSubmitting ? (
+                    "Saving..."
+                  ) : isEditing ? (
+                    <>
+                      <Pencil size={14} />
+                      Edit Message
+                    </>
+                  ) : (
+                    "Sign Guestbook"
+                  )}
+                </button>
+                {isEditing && (
+                  <button
+                    type="button"
+                    onClick={handleRemove}
+                    disabled={isRemoving}
+                    className="neo-button bg-red-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                  >
+                    <Trash2 size={14} />
+                    {isRemoving ? "Removing..." : "Remove"}
+                  </button>
                 )}
-              </button>
+              </div>
             </form>
           )}
         </>

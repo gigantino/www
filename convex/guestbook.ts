@@ -108,6 +108,23 @@ export const sign = mutation({
   },
 });
 
+export const remove = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const entry = await ctx.db
+      .query("guestbookEntries")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!entry) throw new Error("No entry found");
+
+    await ctx.db.delete(entry._id);
+  },
+});
+
 export const count = query({
   args: {},
   handler: async (ctx) => {
