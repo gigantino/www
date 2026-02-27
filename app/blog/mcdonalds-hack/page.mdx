@@ -1,0 +1,271 @@
+import Image from "next/image";
+
+export const metadata = {
+  title: "How We Broke McDonald's Italy From the Inside Out",
+  description:
+    "What started as automating a Snake game turned into hijacking the McDonald's app bridge, intercepting their loyalty system and finding every hidden coupon they had.",
+  openGraph: {
+    type: "article",
+    publishedTime: "2026-02-27",
+    tags: ["Security", "Reverse Engineering"],
+  },
+};
+
+# How We Broke McDonald's Italy From the Inside Out
+
+If you've read my [previous post about ChickenDonald](/blog/chicken-exploit), you know my friends and I have a habit of poking at fast-food apps. This time it was McDonald's Italy!
+
+McDonald's Italy launched a promotion for their 40th anniversary. Inside the app, there was a daily minigame: Snake. Classic Snake, on a 20×20 grid. Play it, get a high score, win a prize. The prizes were collectible game pieces, so nothing worth money, but we wanted to see how far we could push it.
+
+What started as "let me automate this Snake game" turned into discovering an authentication system so broken that we could log into any user's account with just their email, an app bridge that let us redeem any offer in the entire McDonald's ecosystem and a survey page that conveniently listed every hidden coupon code the company had.
+
+## Finding the game
+
+My friend [Dere](https://derewah.dev) spotted it first. He sent a screenshot to our group chat: McDonald's Italy had a new minigame in the app, and the daily prize was some kind of collectible. Nothing crazy, but enough to get us interested.
+
+<Image
+  src="/blog/mcdonalds-hack/game.jpg"
+  alt="McDonald's Italy 40th anniversary Snake game"
+  width={800}
+  height={450}
+  className="my-6 w-full rounded-lg border-3 border-[var(--color-black)] shadow-[4px_4px_0_var(--color-black)]"
+/>
+
+Within minutes he'd already written a script to automate it. When I asked how much of it Claude had done, he said 99%. He'd basically just pointed Claude Code at the problem and told it what to look for.
+
+I wanted in. I opened Claude Code myself, gave it dangerously permissions, and told it to figure out the game.
+
+## How the game worked
+
+The Snake game was a WebView inside the McDonald's app, loaded from [mcdonalds-40anni.it](https://mcdonalds-40anni.it). When you started a game, the server responded with a `game_id` and a `seed`. That seed was everything.
+
+The game used a deterministic random number generator, a standard LCG (linear congruential generator) seeded with a CRC32 hash of the seed string. Given the same seed, the food and bonus items would always spawn in the exact same positions, in the exact same order.
+
+```typescript
+class Rng {
+  private state: bigint;
+  constructor(seed: string) {
+    this.state = BigInt(crc32(seed) >>> 0);
+  }
+  next(min: number, max: number): number {
+    this.state = (1103515245n * this.state + 12345n) & 0x7fffffffn;
+    return min + Number(this.state % BigInt(max - min + 1));
+  }
+}
+```
+
+The server didn't watch you play in real time. The client accumulated your moves as "ticks" (a direction plus a repeat count), sent batches every 50 steps and submitted the final batch when you died. The server replayed your ticks against its own copy of the game engine and checked that the score matched. If the replay was consistent, the score was accepted.
+
+Same fundamental flaw we found in the ChickenDonald game: all validation happened by replaying client-submitted data. The server just checked internal consistency. So if you could produce a valid sequence of moves that resulted in a high score, the server accepted it.
+
+## The bot
+
+The approach: simulate the game locally with the exact same engine, play it perfectly, submit the moves.
+
+Snake on a 20×20 grid is a solved problem, but you need a strategy that consistently reaches high scores without crashing. The solution was a Hamiltonian cycle with greedy shortcutting.
+
+A Hamiltonian cycle visits every cell on the grid exactly once and returns to the start. Follow the cycle and you'll eventually eat every piece of food and never crash. Safe, but painfully slow since the snake has to traverse all 400 cells between each food pickup.
+
+The optimization is shortcutting. Instead of always following the cycle, check whether you can jump ahead toward the food. As long as the shortcut doesn't put you ahead of your own tail in cycle order, it's safe.
+
+```typescript
+function chooseDirection(game: SnakeGame): Dir {
+  const head = game.snake[0];
+  const tail = game.snake[game.snake.length - 1];
+  const headIdx = cycleIdx[head.x][head.y];
+  const tailIdx = cycleIdx[tail.x][tail.y];
+
+  const target = game.bonus && game.bonusActive ? game.bonus : game.food;
+  const targetIdx = cycleIdx[target.x][target.y];
+
+  const snakeSet = new Set<string>();
+  for (const s of game.snake) snakeSet.add(`${s.x},${s.y}`);
+
+  const headToTail = cycleDist(headIdx, tailIdx);
+
+  let bestDir: Dir = cycleNext[head.x][head.y]; // default: follow cycle
+  let bestScore = Infinity;
+
+  for (const d of DIRS) {
+    if (OPP[d] === game.direction) continue;
+    const np = { x: head.x + DV[d].x, y: head.y + DV[d].y };
+    if (np.x < 0 || np.y < 0 || np.x >= TX || np.y >= TY) continue;
+    if (snakeSet.has(`${np.x},${np.y}`)) continue;
+
+    const npIdx = cycleIdx[np.x][np.y];
+    const headToNp = cycleDist(headIdx, npIdx);
+    if (headToNp === 0 || headToNp >= headToTail) continue;
+
+    const npToTarget = cycleDist(npIdx, targetIdx);
+    if (npToTarget < bestScore) {
+      bestScore = npToTarget;
+      bestDir = d;
+    }
+  }
+  return bestDir;
+}
+```
+
+Once the target score was reached, the bot intentionally crashed the snake into a wall, triggering death and the final score submission.
+
+The whole thing worked about 30% of the time at first. The server had some validation edge cases that occasionally rejected runs, and the leaderboard updated in real time. Within an hour of starting, Dere was #1.
+
+I threw Claude Code at it with a `CLAUDE.md` that told it not to exceed a score of 2100 during test runs. Didn't want to make things too obvious.
+
+## The authentication disaster
+
+This is where it got really bad for McDonald's.
+
+While digging through the frontend JavaScript (specifically `chunk-PQ.js`), I found something that shouldn't have been there: a hardcoded HMAC secret.
+
+```
+YquEeCwqBmSDhYAL^T6jv^
+```
+
+The login flow worked like this: the app took the user's email, computed `HmacSHA256(email, secret)`, concatenated it as `email|hmac`, base64-encoded the whole thing, and sent it to `/api/auth/login`. The server handed back a JWT. No password. No OTP. No verification of any kind.
+
+```typescript
+function forgeHash(email: string): string {
+  const hmac = createHmac("sha256", SECRET).update(email).digest("hex");
+  return btoa(`${email}|${hmac}`);
+}
+```
+
+Since the secret was sitting right there in the client-side JavaScript, anyone who could read the source code could generate a valid login hash for any email address. We built a script to do exactly that:
+
+```bash
+bun run auth-bypass.ts user@example.com
+```
+
+Dere tried it with my email. It worked. He was logged into my account, could see my username, my score, everything. He could have deleted my account too, since there was a `DELETE auth/me` endpoint that only required a bearer token.
+
+## Everything else that was exposed
+
+Once we had arbitrary account access, we started poking around. The findings kept getting worse.
+
+The Swagger/OpenAPI documentation was fully public at [backend.mcdonalds-40anni.it/api-docs](https://backend.mcdonalds-40anni.it/api-docs). Every single endpoint, its parameters, its expected responses. Completely open. There was also an admin login page at `/admin/login` and a PHPMyAdmin instance running on port 8880. We didn't try to brute-force either of those, but the fact that they were accessible at all was concerning.
+
+We also found a `flush/laravel` endpoint that, when called, flushed the entire server cache. No authentication required. One line:
+
+```typescript
+const res = await fetch("https://backend.mcdonalds-40anni.it/api/flush/laravel");
+```
+
+The usernames on the platform were auto-generated from a limited pool of name combinations. Since accounts could be created with any email and no verification, it was theoretically possible to register enough accounts to reserve all the available names.
+
+## The bridge and the MITM
+
+This is where things escalated from "we automated a game" to "we have full control over the app's offer system."
+
+The Snake game ran inside a WebView in the McDonald's app. When the WebView loaded, the app injected a JavaScript bridge called `mcdBridge` into the page. This bridge was the interface between the web content and the native app, and it could do a lot: read user data (email, name, McDonald's loyalty ID), activate offers, redeem coupons and interact with the Plexure loyalty points system. All through simple JavaScript calls like `state.bridge.message("offerActivation").send(payload)`.
+
+The thing is, the app didn't verify what page was loaded in the WebView. It checked the domain, but the bridge injection happened regardless of the page content. So if you could serve your own page on the expected domain, the app would inject the bridge into it. And then you could call anything.
+
+The app did CA pinning on its own API calls, so standard MITM proxies like Charles wouldn't work. The WebView, however, did not do CA pinning. Dere built a full MITM setup to exploit this.
+
+### DNS interception
+
+First, a custom DNS server. It ran on UDP port 53 and intercepted [mcdonalds-40anni.it](https://mcdonalds-40anni.it), the domain the game loaded from. Any DNS query for that domain resolved to the local machine's IP instead of the real server. Everything else forwarded to Google's DNS (`8.8.8.8`). We also intercepted a couple of other domains later for the survey scraping and Plexure proxy, but the main target was the game.
+
+```typescript
+if (interceptSet.has(qname) && question.type === "A") {
+  const response = dnsPacket.encode({
+    id: query.id,
+    type: "response",
+    flags: dnsPacket.AUTHORITATIVE_ANSWER,
+    answers: [{
+      type: "A", class: "IN", name: question.name,
+      ttl: 60, data: LOCAL_IP,
+    }],
+  });
+  server.send(response, rinfo.port, rinfo.address);
+}
+```
+
+### TLS and phone setup
+
+Second, TLS certificates. We used `mkcert` to generate valid certs for the intercepted domains, then installed the root CA on the phone. On iOS that meant AirDropping the certificate, installing it through Settings and then manually enabling it in Certificate Trust Settings. Once that was done, the phone's DNS was pointed at the machine running our server.
+
+### The control panel
+
+The MITM server itself was about 1400 lines of TypeScript running on Bun. When the McDonald's app opened the WebView to [mcdonalds-40anni.it](https://mcdonalds-40anni.it), the DNS redirect sent it to our machine instead. The app still injected the bridge because it saw the right domain. But instead of the real game page, we served our own control panel.
+
+The panel had several sections. At the top, a bridge status indicator that turned green when the app's bridge was detected. Below that:
+
+**Claim Prize.** A simple form with a loyaltyId and rewardId field and a "Claim" button. You enter the IDs, it fires `bridge.message("offerActivation")` with those values, and the offer activates on your account. We also added a "Force Success" toggle that wrapped the real bridge in a proxy. If the bridge returned an error (like the offer being expired or already claimed), the wrapper swallowed the error and returned `{success: true}` instead. The app happily accepted this.
+
+**Survey Rewards.** This is where it connected to the receipt QR codes. More on that in the next section.
+
+**Reward Scanner.** A brute-force tool. You give it a range of rewardIds and a list of loyaltyIds, and it fires `offerActivation` calls through the bridge in parallel batches. When one succeeds, it plays a sound, fires a browser notification, flashes the screen green and logs the hit. You could also switch it to "Loyalty ID only" mode, where it iterated through loyaltyId ranges with `autoActivate` set to true (no rewardId needed).
+
+**Plexure Proxy.** The DNS server also intercepted [dif.gmal.app](https://dif.gmal.app), which is the Plexure loyalty API that McDonald's uses for their points system. Our server proxied all Plexure requests to the real server, logging everything. When the override was on, any failed `/consumers/points` call got replaced with a fake 200 response. This was Dere's attempt at giving accounts free loyalty points. It worked on the UI side (the app showed the points going up) but we never tested whether it actually persisted server-side.
+
+**Login + Game Bot.** The panel also had the auth bypass and Snake bot built in. You could log into any account, set a target score and watch the bot play through an SSE progress stream. All from one page, all running inside the McDonald's app itself.
+
+<video
+  src="/blog/mcdonalds-hack/mcdo-showcase.mp4"
+  controls
+  playsInline
+  className="my-6 w-full rounded-lg border-3 border-[var(--color-black)] shadow-[4px_4px_0_var(--color-black)]"
+/>
+
+## The receipt QR codes
+
+Multiply mentioned something in the group chat that changed the scope of the whole project. Sometimes McDonald's prints a QR code on your receipt that links to a customer satisfaction survey. Complete the survey, get a hidden offer. These offers don't show up in the regular app, they're only accessible through those survey links.
+
+<Image
+  src="/blog/mcdonalds-hack/recipe.jpg"
+  alt="McDonald's receipt with QR code"
+  width={800}
+  height={450}
+  className="my-6 w-full rounded-lg border-3 border-[var(--color-black)] shadow-[4px_4px_0_var(--color-black)]"
+/>
+
+The survey URLs pointed to [mcdonalds.fast-insight.com](https://mcdonalds.fast-insight.com) with a QR code parameter. The surveys were hosted by ISC-CX, a third-party customer experience company, on [survey.isc-cx.com](https://survey.isc-cx.com). When Dere looked at the survey page source, he found something beautiful: JavaScript variables called `rewardIdMapping` and `loyaltyIdMapping` that contained a complete dump of every rewardId and loyaltyId pair, organized by country.
+
+```javascript
+var rewardIdMapping = {
+    it: {
+        117265: 2984,
+        172107: 4211
+    },
+    ch: {
+        62002: 4309,
+        62003: 4309,
+        161911: 4074,
+    },
+    // ...
+};
+```
+
+Every country McDonald's operates in. All sitting in client-side JavaScript on a survey page.
+
+So we added an endpoint to the MITM server that fetched the survey page, parsed out all four mapping variables (production and staging for both reward and loyalty IDs) and presented them in the control panel. Click "Use" next to any reward, and it auto-filled the loyaltyId and rewardId fields in the Claim Prize section. One more click and the offer was activated on your account through the bridge.
+
+The day Dere found this, he reported it in the group chat. He'd been probing loyaltyIds the day before and had found three that corresponded to active offers: L:5705 was the Snake game prize, L:4211 was unknown, and L:3426 was unknown. Then he went to the survey section and found the full mapping. Turns out L:4211 with R:117265 was a coffee for 0.50. He also found [survey.isc-cx.com/mcdSwitzerlandqrcodescanner](https://survey.isc-cx.com/mcdSwitzerlandqrcodescanner), a page specifically for scanning Swiss McDonald's QR codes, which had its own set of reward IDs.
+
+I live near the Swiss border so I asked if the Swiss codes worked on the Swiss app. The answer was yes. We started testing. The scope had gone from "Italy 40th anniversary Snake game" to "the entire McDonald's European offer system."
+
+## The Firebase playground
+
+There was one more discovery. Someone found [mcdonald-s-fc045.firebaseapp.com](https://mcdonald-s-fc045.firebaseapp.com), which turned out to be a test/demo page for the McDonald's smart webview system. It had buttons for every bridge feature: get user data, prompt login, get location, add tags, activate offers, get device info. A playground for everything the bridge could do.
+
+When we routed this page through our MITM (so the app would inject the real bridge into it), it became a fully functional cheat tool. Every bridge feature, accessible through a clean UI, running with real credentials.
+
+## What we didn't do
+
+We kept our scores reasonable. We didn't try to access the admin panel or the database. We didn't mass-create accounts or spam the leaderboard. We tested the Plexure points override on our own accounts and stopped there.
+
+The same company runs the minigame infrastructure for multiple promotions, and we suspect it's the same system used for the ChickenDonald contests we'd exploited before. We want to be around for the next one, so we didn't want to burn the bridge. Pun intended.
+
+My girlfriend also complained I was spending more time with Claude than with her. She wasn't wrong.
+
+## The takeaways
+
+Every vulnerability we found came down to trusting the client. The HMAC secret was in the client. The game validation was a client replay. The bridge calls weren't verified server-side. The survey pages had all the offer IDs in plaintext JavaScript. The API documentation was publicly accessible.
+
+The bridge was the worst part. Once you controlled the page content in the WebView, you had access to the same native APIs that the real app pages used. Offer activation, user data, loyalty points. The app had no way to distinguish our page from a real one.
+
+If you're building a promotional game or loyalty system for a major brand: don't put secrets in frontend code, don't trust client-submitted game replays, don't expose your API docs and admin panels, don't put your entire offer database in client-side JavaScript on a survey page and definitely verify what page content your WebView bridge is talking to.
+
+Thanks to Dere for kicking this off and to Multiply for the QR code tip!

@@ -21,6 +21,14 @@ export const socialLinks = [
 
 export const blogPosts = [
   {
+    title: "How We Broke McDonald's Italy From the Inside Out",
+    description:
+      "What started as automating a Snake game turned into hijacking the McDonald's app bridge, intercepting their loyalty system and finding every hidden coupon they had.",
+    date: "2026-02-27",
+    url: "/blog/mcdonalds-hack",
+    tags: ["Security", "Reverse Engineering"],
+  },
+  {
     title: "Building an LLM trained on Minecraft server chat",
     description:
       "Training a language model on the chaotic chat logs from a Minecraft server.",
