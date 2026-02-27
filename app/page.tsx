@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <HomeShell>
-      <main className="mx-auto grid max-w-prose gap-4">
+      <main className="mx-auto grid max-w-2xl gap-4">
         <Bio initialGuestbookCount={guestbookCount} />
         <Writing />
         <Newsletter />
