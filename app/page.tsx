@@ -1,5 +1,6 @@
 import { Bio } from "@/components/Bio";
 import { Writing } from "@/components/Writing";
+import { Bookmarks } from "@/components/Bookmarks";
 import { Newsletter } from "@/components/Newsletter";
 import { HomeShell } from "@/components/HomeShell";
 import { ConvexHttpClient } from "convex/browser";
@@ -16,6 +17,7 @@ export default async function Home() {
       <main className="mx-auto grid max-w-2xl gap-4">
         <Bio initialGuestbookCount={guestbookCount} />
         <Writing />
+        <Bookmarks />
         <Newsletter />
       </main>
     </HomeShell>

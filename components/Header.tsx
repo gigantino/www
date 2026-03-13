@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { personalInfo } from "@/lib/data";
-import { User, PenLine, Mail, Code } from "lucide-react";
+import { User, PenLine, Bookmark, Mail, Code } from "lucide-react";
 
 const navItems = [
   { id: "bio", label: "About", icon: User },
   { id: "writing", label: "Writing", icon: PenLine },
+  { id: "bookmarks", label: "Bookmarks", icon: Bookmark },
   { id: "newsletter", label: "Newsletter", icon: Mail },
   { id: "projects", label: "Projects", icon: Code },
 ];

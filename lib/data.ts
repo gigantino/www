@@ -71,6 +71,15 @@ export const externalWriting = [
   },
 ];
 
+export const bookmarks = [
+  {
+    title: "This Is Not The Computer For You",
+    url: "https://samhenri.gold/blog/20260312-this-is-not-the-computer-for-you/",
+    author: "Sam Henri Gold",
+    date: "2026-03-12",
+  },
+];
+
 export const newsletter = {
   description:
     "Get updates on new projects and articles.",
