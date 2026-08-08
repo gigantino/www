@@ -1,12 +1,16 @@
 import { NextRequest } from "next/server";
+import { publicEnv } from "@/lib/env.public";
 
-const CONVEX_SITE_URL = process.env.NEXT_PUBLIC_CONVEX_SITE_URL!;
+const CONVEX_SITE_URL = publicEnv.NEXT_PUBLIC_CONVEX_SITE_URL;
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ provider: string }> }
 ) {
   const { provider } = await params;
+  if (provider !== "github") {
+    return new Response(null, { status: 404 });
+  }
   const url = new URL(request.url);
 
   const convexUrl = `${CONVEX_SITE_URL}/api/auth/callback/${provider}${url.search}`;

@@ -1,14 +1,26 @@
-import { NextRequest } from "next/server";
+import { coralChatRequestSchema } from "@/lib/schemas/coral-chat";
+import { NextRequest, NextResponse } from "next/server";
 
 const UPSTREAM = "https://coralgpt.afkara.dev/chat-stream";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  const body: unknown = await req.json().catch(() => undefined);
+  const parsedBody = coralChatRequestSchema.safeParse(body);
+
+  if (!parsedBody.success) {
+    return NextResponse.json(
+      {
+        error: "Invalid chat request.",
+        message: parsedBody.error.issues[0]?.message ?? "Invalid request.",
+      },
+      { status: 400 },
+    );
+  }
 
   const upstream = await fetch(UPSTREAM, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify(parsedBody.data),
   });
 
   if (!upstream.ok || !upstream.body) {

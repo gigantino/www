@@ -1,15 +1,24 @@
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
+import {
+  subscribeRequestSchema,
+  subscribeResponseSchema,
+} from "@/lib/schemas/newsletter";
+import { publicEnv } from "@/lib/env.public";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+  const convex = new ConvexHttpClient(publicEnv.NEXT_PUBLIC_CONVEX_URL);
   try {
-    const { email } = await req.json();
+    const body: unknown = await req.json().catch(() => undefined);
+    const parsedBody = subscribeRequestSchema.safeParse(body);
 
-    if (!email || typeof email !== "string") {
+    if (!parsedBody.success) {
       return NextResponse.json(
-        { success: false, message: "Email is required." },
+        {
+          success: false,
+          message: parsedBody.error.issues[0]?.message ?? "Invalid request.",
+        },
         { status: 400 }
       );
     }
@@ -20,11 +29,11 @@ export async function POST(req: NextRequest) {
       "unknown";
 
     const result = await convex.mutation(api.subscribers.subscribe, {
-      email,
+      email: parsedBody.data.email,
       ip,
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(subscribeResponseSchema.parse(result));
   } catch {
     return NextResponse.json(
       { success: false, message: "Something went wrong. Please try again." },

@@ -1,6 +1,7 @@
 import { blogPosts, personalInfo } from "@/lib/data";
+import { serverEnv } from "@/lib/env.server";
 
-const SITE_URL = process.env.SITE_URL || "https://ggtn.ch";
+const SITE_URL = serverEnv.SITE_URL;
 
 export function GET() {
   const items = blogPosts

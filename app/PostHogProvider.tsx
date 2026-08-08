@@ -4,6 +4,7 @@ import { PostHogProvider as PHProvider, usePostHog } from "posthog-js/react";
 import { useEffect, useState, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { PostHog } from "posthog-js";
+import { publicEnv } from "@/lib/env.public";
 
 function PostHogPageView() {
   const pathname = usePathname();
@@ -27,13 +28,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const [client, setClient] = useState<PostHog | null>(null);
 
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    const key = publicEnv.NEXT_PUBLIC_POSTHOG_KEY;
     if (!key) return;
 
     import("posthog-js").then((mod) => {
       const posthog = mod.default;
       posthog.init(key, {
-        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+        api_host: publicEnv.NEXT_PUBLIC_POSTHOG_HOST,
         capture_pageview: false,
         capture_pageleave: true,
         session_recording: {

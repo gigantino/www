@@ -1,6 +1,7 @@
 "use client";
 
 import { newsletter } from "@/lib/data";
+import { subscribeResponseSchema } from "@/lib/schemas/newsletter";
 import { BentoCard } from "./ui/BentoCard";
 import { useEffect, useState } from "react";
 import { CircleCheck, CircleAlert, Send, Mail } from "lucide-react";
@@ -45,7 +46,7 @@ export function Newsletter() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      const data = await res.json();
+      const data = subscribeResponseSchema.parse(await res.json());
       setMessage({ text: data.message, success: data.success });
       if (data.success) setEmail("");
     } catch {

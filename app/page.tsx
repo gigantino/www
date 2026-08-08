@@ -5,11 +5,12 @@ import { Newsletter } from "@/components/Newsletter";
 import { HomeShell } from "@/components/HomeShell";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
+import { publicEnv } from "@/lib/env.public";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+  const convex = new ConvexHttpClient(publicEnv.NEXT_PUBLIC_CONVEX_URL);
   const guestbookCount = await convex.query(api.guestbook.count);
 
   return (

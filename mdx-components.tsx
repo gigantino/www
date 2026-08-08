@@ -1,7 +1,20 @@
 import type { MDXComponents } from "mdx/types";
 import Image, { ImageProps } from "next/image";
-import { codeToHtml } from "shiki";
+import { bundledLanguages, bundledThemes } from "shiki";
+import {
+  createBundledHighlighter,
+  createSingletonShorthands,
+} from "shiki/core";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import React from "react";
+
+const createHighlighter = createBundledHighlighter({
+  langs: bundledLanguages,
+  themes: bundledThemes,
+  engine: () => createJavaScriptRegexEngine(),
+});
+
+const { codeToHtml } = createSingletonShorthands(createHighlighter);
 
 function getCodeProps(children: React.ReactNode) {
   if (!React.isValidElement(children)) return null;

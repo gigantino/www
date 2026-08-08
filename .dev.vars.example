@@ -1,0 +1,4 @@
+NEXTJS_ENV=development
+NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
+NEXT_PUBLIC_CONVEX_SITE_URL=https://your-deployment.convex.site
+SITE_URL=http://localhost:8787

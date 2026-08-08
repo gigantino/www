@@ -11,8 +11,9 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import type { Theme } from "@/lib/theme";
 
-export type Theme = "light" | "dark" | "device";
+export type { Theme } from "@/lib/theme";
 
 function useSystemDark() {
   return useSyncExternalStore(

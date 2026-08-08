@@ -4,9 +4,11 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { PostHogProvider } from "./PostHogProvider";
-import { ThemeProvider, type Theme } from "@/components/ThemeProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
+import { publicEnv } from "@/lib/env.public";
+import { isTheme } from "@/lib/theme";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -76,7 +78,7 @@ export const metadata: Metadata = {
 async function GuestbookLoader() {
   let data = null;
   try {
-    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+    const convex = new ConvexHttpClient(publicEnv.NEXT_PUBLIC_CONVEX_URL);
     data = await convex.query(api.guestbook.list, {
       page: 1,
       pageSize: 5,
@@ -93,8 +95,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const initialTheme =
-    (cookieStore.get("theme")?.value as Theme) || "device";
+  const themeCookie = cookieStore.get("theme")?.value;
+  const initialTheme = isTheme(themeCookie) ? themeCookie : "device";
 
   return (
     <html lang="en" className={initialTheme === "dark" ? "dark" : undefined} style={{ colorScheme: initialTheme === "dark" ? "dark" : "light" }} suppressHydrationWarning>

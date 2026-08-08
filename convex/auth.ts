@@ -1,5 +1,11 @@
 import GitHub from "@auth/core/providers/github";
 import { convexAuth } from "@convex-dev/auth/server";
+import { z } from "zod";
+
+const githubProfileSchema = z.object({
+  githubUsername: z.string().trim().min(1),
+  githubCreatedAt: z.iso.datetime(),
+});
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
@@ -18,11 +24,11 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   ],
   callbacks: {
     async afterUserCreatedOrUpdated(ctx, { userId, profile }) {
-      const profileData = profile as Record<string, unknown>;
-      if (profileData.githubUsername) {
+      const profileData = githubProfileSchema.safeParse(profile);
+      if (profileData.success) {
         await ctx.db.patch(userId, {
-          githubUsername: profileData.githubUsername as string,
-          githubCreatedAt: profileData.githubCreatedAt as string,
+          githubUsername: profileData.data.githubUsername,
+          githubCreatedAt: profileData.data.githubCreatedAt,
         });
       }
     },
