@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs",
     "build:with-convex": "convex deploy --cmd \"next build\"",
     "dev": "next dev",
     "start": "next start",
