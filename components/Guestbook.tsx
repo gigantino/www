@@ -281,13 +281,15 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {entry.image && (
-                      <Image
-                        src={entry.image}
-                        alt={entry.name}
-                        width={24}
-                        height={24}
-                        className="rounded-full border-2 border-gray-800 dark:border-gray-600"
-                      />
+                      <span className="guestbook-avatar size-6 shrink-0 overflow-hidden rounded-full border-2 border-gray-800 dark:border-gray-600">
+                        <Image
+                          src={entry.image}
+                          alt={entry.name}
+                          width={24}
+                          height={24}
+                          className="block size-full object-cover"
+                        />
+                      </span>
                     )}
                     {entry.githubUsername ? (
                       <a

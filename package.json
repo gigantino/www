@@ -6,7 +6,7 @@
     "build": "next build",
     "build:cloudflare": "node scripts/build-cloudflare.mjs",
     "build:with-convex": "convex deploy --cmd \"next build\"",
-    "dev": "next dev",
+    "dev": "bun --env-file=.dev.vars scripts/dev.mjs",
     "start": "next start",
     "lint": "eslint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",

@@ -1,18 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { unstable_readConfig } from "wrangler";
-import { z } from "zod";
+import { loadPublicCloudflareEnvironment } from "./cloudflare-environment.mjs";
 
-const publicBuildVariablesSchema = z.object({
-  NEXT_PUBLIC_CONVEX_URL: z.url(),
-  NEXT_PUBLIC_CONVEX_SITE_URL: z.url(),
-  SITE_URL: z.url(),
-});
-
-const config = unstable_readConfig(
-  { config: "wrangler.jsonc" },
-  { hideWarnings: true },
-);
-const publicBuildVariables = publicBuildVariablesSchema.parse(config.vars);
+const publicBuildVariables = loadPublicCloudflareEnvironment();
 const buildEnvironment = {
   ...process.env,
   ...publicBuildVariables,

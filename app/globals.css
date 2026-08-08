@@ -238,6 +238,22 @@ article time {
   opacity: 0.9;
 }
 
+.guestbook-avatar {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-gray-100) 0 3px,
+    var(--color-gray-300) 3px 6px
+  );
+}
+
+.dark .guestbook-avatar {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-gray-600) 0 3px,
+    var(--color-gray-800) 3px 6px
+  );
+}
+
 /* Dark mode SVG shadow override for profile picture flower */
 .dark [id^="flower-shadow"] feDropShadow {
   flood-color: theme(colors.gray.700);
@@ -267,4 +283,3 @@ article time {
 .dark .neo-button:active {
   box-shadow: 1px 1px 0 theme(colors.gray.700);
 }
-

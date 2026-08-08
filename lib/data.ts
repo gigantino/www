@@ -86,7 +86,17 @@ export const newsletter = {
 };
 
 
-export const projects = [
+type Project = {
+  name: string;
+  description: string;
+  website?: string;
+  github?: string;
+  icon?: string;
+  pinned: boolean;
+  deprecated?: boolean;
+};
+
+export const projects: Project[] = [
   {
     name: "Delizioso",
     description: "Run your restaurant on autopilot",
@@ -102,6 +112,7 @@ export const projects = [
     github: undefined,
     icon: "/icons/hyauth.png",
     pinned: true,
+    deprecated: true,
   },
   {
     name: "hn",
@@ -122,7 +133,7 @@ export const projects = [
   {
     name: "diplate",
     description: "Get info about diplomatic license plates in Switzerland",
-    website: "https://diplate.ch",
+    website: "https://diplate.ggtn.ch",
     github: "https://github.com/gigantino/diplate-ch",
     icon: "/icons/diplate.svg",
     pinned: false,

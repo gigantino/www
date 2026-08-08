@@ -42,6 +42,14 @@ function ProjectLinks({
   );
 }
 
+function DeprecatedBadge() {
+  return (
+    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+      Deprecated
+    </span>
+  );
+}
+
 export function Projects() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -79,6 +87,7 @@ export function Projects() {
                 />
               )}
               <h3 className="font-bold dark:text-gray-100">{project.name}</h3>
+              {project.deprecated && <DeprecatedBadge />}
               <Pin size={14} className="inline-block text-gray-400" />
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
@@ -91,7 +100,10 @@ export function Projects() {
         <ul className="mt-6 flex flex-col gap-4">
           {nonPinnedProjects.map((project) => (
             <li key={project.name} className="flex flex-col gap-1">
-              <h3 className="font-medium dark:text-gray-100">{project.name}</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-medium dark:text-gray-100">{project.name}</h3>
+                {project.deprecated && <DeprecatedBadge />}
+              </div>
               <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
               <ProjectLinks
                 website={project.website}
