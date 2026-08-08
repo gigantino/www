@@ -13,9 +13,11 @@ const config = unstable_readConfig(
   { hideWarnings: true },
 );
 const publicBuildVariables = publicBuildVariablesSchema.parse(config.vars);
-const buildEnvironment = { ...process.env };
-
-Object.assign(buildEnvironment, publicBuildVariables);
+const buildEnvironment = {
+  ...process.env,
+  ...publicBuildVariables,
+  NEXT_TELEMETRY_DISABLED: "1",
+};
 
 console.log(
   `Loaded public build variables from wrangler.jsonc: ${Object.keys(publicBuildVariables).join(", ")}`,

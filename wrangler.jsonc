@@ -2,6 +2,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"main": ".open-next/worker.js",
 	"name": "www",
+	"send_metrics": false,
 	"compatibility_date": "2026-08-08",
 	"workers_dev": true,
 	"preview_urls": true,
