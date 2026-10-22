@@ -16,11 +16,11 @@ const TAG_COLORS: Record<string, { bg: string; text: string }> = {
 const DEFAULT_TAG = { bg: "#e5e7eb", text: "#374151" };
 
 async function loadFonts() {
-  const [bricolage, geist] = await Promise.all([
-    readFile(join(process.cwd(), "public/fonts/BricolageGrotesque-Bold.ttf")),
-    readFile(join(process.cwd(), "public/fonts/Geist-Regular.ttf")),
+  const [fixelDisplay, fixelText] = await Promise.all([
+    readFile(join(process.cwd(), "public/fonts/FixelDisplay-Bold.ttf")),
+    readFile(join(process.cwd(), "public/fonts/FixelText-Medium.ttf")),
   ]);
-  return { bricolage, geist };
+  return { fixelDisplay, fixelText };
 }
 
 export async function generateOGImage({
@@ -32,7 +32,7 @@ export async function generateOGImage({
   description: string;
   tags?: string[];
 }) {
-  const { bricolage, geist } = await loadFonts();
+  const { fixelDisplay, fixelText } = await loadFonts();
 
   return new ImageResponse(
     (
@@ -75,7 +75,7 @@ export async function generateOGImage({
                         padding: "6px 16px",
                         borderRadius: "9999px",
                         fontSize: "18px",
-                        fontFamily: "Geist",
+                        fontFamily: "Fixel Text",
                         border: "2px solid #1a1a1a",
                       }}
                     >
@@ -88,7 +88,7 @@ export async function generateOGImage({
             <div
               style={{
                 fontSize: "52px",
-                fontFamily: "Bricolage Grotesque",
+                fontFamily: "Fixel Display",
                 fontWeight: 700,
                 color: "#1a1a1a",
                 lineHeight: 1.15,
@@ -100,7 +100,7 @@ export async function generateOGImage({
             <div
               style={{
                 fontSize: "24px",
-                fontFamily: "Geist",
+                fontFamily: "Fixel Text",
                 color: "#4b5563",
                 lineHeight: 1.4,
               }}
@@ -113,7 +113,7 @@ export async function generateOGImage({
               display: "flex",
               justifyContent: "flex-end",
               fontSize: "24px",
-              fontFamily: "Bricolage Grotesque",
+              fontFamily: "Fixel Display",
               fontWeight: 700,
               color: "#1a1a1a",
             }}
@@ -127,8 +127,8 @@ export async function generateOGImage({
       width: 1200,
       height: 630,
       fonts: [
-        { name: "Bricolage Grotesque", data: bricolage, weight: 700 },
-        { name: "Geist", data: geist, weight: 400 },
+        { name: "Fixel Display", data: fixelDisplay, weight: 700 },
+        { name: "Fixel Text", data: fixelText, weight: 500 },
       ],
     },
   );

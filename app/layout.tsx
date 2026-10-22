@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
@@ -31,14 +32,22 @@ const Projects = dynamic(() =>
   import("@/components/Projects").then((m) => m.Projects)
 );
 
-const bricolage = Bricolage_Grotesque({
+const fixelText = localFont({
   variable: "--font-sans",
-  subsets: ["latin"],
+  src: [
+    { path: "./fonts/FixelText-Medium.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/FixelText-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/FixelText-Bold.woff2", weight: "700", style: "normal" },
+  ],
 });
 
-const geist = Geist({
-  variable: "--font-geist",
-  subsets: ["latin"],
+const fixelDisplay = localFont({
+  variable: "--font-display",
+  src: [
+    { path: "./fonts/FixelDisplay-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/FixelDisplay-Bold.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/FixelDisplay-ExtraBold.woff2", weight: "800", style: "normal" },
+  ],
 });
 
 const geistMono = Geist_Mono({
@@ -104,7 +113,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body
-        className={`${bricolage.variable} ${geist.variable} ${geistMono.variable} antialiased`}
+        className={`${fixelText.variable} ${fixelDisplay.variable} ${geistMono.variable} antialiased`}
       >
         <script
           type="application/ld+json"
