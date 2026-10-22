@@ -98,7 +98,7 @@ type Project = {
   website?: string;
   github?: string;
   icon?: string;
-  with?: { name: string; url: string };
+  brother?: string;
   pinned: boolean;
   deprecated?: boolean;
 };
@@ -126,7 +126,7 @@ export const projects: Project[] = [
     website: "https://orcavi.ch",
     github: undefined,
     icon: "/icons/orcavi.svg",
-    with: { name: "dgigantino", url: "https://github.com/dgigantino" },
+    brother: "dgigantino",
     pinned: true,
   },
   {

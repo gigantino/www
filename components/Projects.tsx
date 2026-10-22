@@ -42,19 +42,19 @@ function ProjectLinks({
   );
 }
 
-function BuiltWith({ partner }: { partner?: { name: string; url: string } }) {
-  if (!partner) return null;
+function BuiltWithBrother({ github }: { github?: string }) {
+  if (!github) return null;
 
   return (
     <p className="text-sm text-gray-600 dark:text-gray-300">
       Working on it with my brother{" "}
       <a
-        href={partner.url}
+        href={`https://github.com/${github}`}
         target="_blank"
         rel="noopener noreferrer"
         className="neo-link font-medium text-gray-800 dark:text-gray-100"
       >
-        @{partner.name}
+        @{github}
       </a>
     </p>
   );
@@ -109,7 +109,7 @@ export function Projects() {
               <Pin size={14} className="inline-block text-gray-400" />
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
-            <BuiltWith partner={project.with} />
+            <BuiltWithBrother github={project.brother} />
             <ProjectLinks website={project.website} github={project.github} />
           </li>
         ))}
@@ -124,7 +124,7 @@ export function Projects() {
                 {project.deprecated && <DeprecatedBadge />}
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
-              <BuiltWith partner={project.with} />
+              <BuiltWithBrother github={project.brother} />
               <ProjectLinks
                 website={project.website}
                 github={project.github}
