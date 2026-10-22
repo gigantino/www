@@ -35,6 +35,13 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+@media (pointer: fine) {
+  html,
+  body {
+    overscroll-behavior: none;
+  }
+}
+
 body.blog-dark {
   background: #0a0a0a;
 }
