@@ -4,6 +4,7 @@ import { useState } from "react";
 import { blogPosts } from "@/lib/data";
 import { BentoCard } from "./ui/BentoCard";
 import { Rss, PenLine, Check, X } from "lucide-react";
+import { formatDate } from "@/lib/format";
 
 const tagColors = [
   "bg-yellow-100 dark:bg-yellow-900/40",
@@ -50,11 +51,7 @@ export function Writing() {
                   </p>
                 )}
                 <time className="text-base text-gray-500 dark:text-gray-500">
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {formatDate(post.date)}
                 </time>
             </a>
           </li>

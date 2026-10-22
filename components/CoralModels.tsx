@@ -1,4 +1,5 @@
 import { ExternalLink } from "lucide-react";
+import { formatDate } from "@/lib/format";
 
 type ModelFamily = {
   name: string;
@@ -45,14 +46,6 @@ const families: ModelFamily[] = [
     models: [{ id: "gemma-3-4b-coralmc-7000it-v05", date: "2026-01-17" }],
   },
 ];
-
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
 
 export function CoralModels() {
   return (

@@ -1,6 +1,7 @@
 import { bookmarks } from "@/lib/data";
 import { BentoCard } from "./ui/BentoCard";
 import { Bookmark } from "lucide-react";
+import { formatDate } from "@/lib/format";
 
 const newBadge = (
   <div className="absolute -top-8 -right-8">
@@ -42,11 +43,7 @@ export function Bookmarks() {
                 {bookmark.author}
               </span>
               <time className="text-base text-gray-500 dark:text-gray-500">
-                {new Date(bookmark.date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                {formatDate(bookmark.date)}
               </time>
             </a>
           </li>
