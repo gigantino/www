@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback, type ReactNode } from "react";
 
 const WHITESPACE_RE = /\s+/g;
+const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
 
 interface ModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export function Modal({
 }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const sizeClass = size === "md" ? "sm:max-w-lg" : "sm:max-w-[45rem]";
@@ -42,10 +44,35 @@ export function Modal({
 
   useEffect(() => {
     if (!isOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    const blockBackgroundScroll = (e: Event) => {
+      const content = contentRef.current;
+      const insideScrollable =
+        content &&
+        content.contains(e.target as Node) &&
+        content.scrollHeight > content.clientHeight;
+      if (!insideScrollable) e.preventDefault();
+    };
+    const blockBackgroundKeyScroll = (e: KeyboardEvent) => {
+      if (!SCROLL_KEYS.has(e.key)) return;
+      const target = e.target as HTMLElement;
+      if (target.closest("input, textarea, select, [contenteditable]")) return;
+      if (e.key === " " && target.closest("button, a")) return;
+      const content = contentRef.current;
+      const insideScrollable =
+        content &&
+        content.contains(target) &&
+        content.scrollHeight > content.clientHeight;
+      if (!insideScrollable) e.preventDefault();
+    };
+    overlay.addEventListener("wheel", blockBackgroundScroll, { passive: false });
+    overlay.addEventListener("touchmove", blockBackgroundScroll, { passive: false });
+    overlay.addEventListener("keydown", blockBackgroundKeyScroll);
     return () => {
-      document.body.style.overflow = prev;
+      overlay.removeEventListener("wheel", blockBackgroundScroll);
+      overlay.removeEventListener("touchmove", blockBackgroundScroll);
+      overlay.removeEventListener("keydown", blockBackgroundKeyScroll);
     };
   }, [isOpen]);
 
@@ -128,7 +155,7 @@ export function Modal({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">{children}</div>
+        <div ref={contentRef} className="flex-1 overflow-y-auto overscroll-contain p-6">{children}</div>
       </div>
     </div>
   );
