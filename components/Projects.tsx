@@ -42,6 +42,24 @@ function ProjectLinks({
   );
 }
 
+function BuiltWith({ partner }: { partner?: { name: string; url: string } }) {
+  if (!partner) return null;
+
+  return (
+    <p className="text-sm text-gray-600 dark:text-gray-300">
+      Working on it with my brother{" "}
+      <a
+        href={partner.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="neo-link font-medium text-gray-800 dark:text-gray-100"
+      >
+        @{partner.name}
+      </a>
+    </p>
+  );
+}
+
 function DeprecatedBadge() {
   return (
     <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
@@ -91,6 +109,7 @@ export function Projects() {
               <Pin size={14} className="inline-block text-gray-400" />
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
+            <BuiltWith partner={project.with} />
             <ProjectLinks website={project.website} github={project.github} />
           </li>
         ))}
@@ -105,6 +124,7 @@ export function Projects() {
                 {project.deprecated && <DeprecatedBadge />}
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
+              <BuiltWith partner={project.with} />
               <ProjectLinks
                 website={project.website}
                 github={project.github}

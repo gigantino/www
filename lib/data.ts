@@ -92,27 +92,19 @@ type Project = {
   website?: string;
   github?: string;
   icon?: string;
+  with?: { name: string; url: string };
   pinned: boolean;
   deprecated?: boolean;
 };
 
 export const projects: Project[] = [
   {
-    name: "Delizioso",
-    description: "Run your restaurant on autopilot",
-    website: "https://delizioso.app",
+    name: "microhost",
+    description: "Cheap servers on old ThinkPads",
+    website: "https://microhost.ch",
     github: undefined,
-    icon: "/icons/delizioso.png",
+    icon: "/icons/microhost.svg",
     pinned: true,
-  },
-  {
-    name: "HyAuth",
-    description: "The OAuth2 API to authenticate Hytale players",
-    website: "https://www.hyauth.com",
-    github: undefined,
-    icon: "/icons/hyauth.png",
-    pinned: true,
-    deprecated: true,
   },
   {
     name: "hn",
@@ -123,12 +115,38 @@ export const projects: Project[] = [
     pinned: true,
   },
   {
+    name: "Orcavi",
+    description: "Safer mobile technology, starting with a phone with safety and flexible control built in",
+    website: "https://orcavi.ch",
+    github: undefined,
+    icon: "/icons/orcavi.svg",
+    with: { name: "dgigantino", url: "https://github.com/dgigantino" },
+    pinned: true,
+  },
+  {
     name: "CoralProxy",
     description: "A proxy that makes use of real-time packet manipulation to extend the vanilla Minecraft client",
     website: "https://coralproxy.it",
     github: undefined,
     icon: "/icons/coralproxy.png",
     pinned: true,
+  },
+  {
+    name: "HyAuth",
+    description: "The OAuth2 API to authenticate Hytale players",
+    website: "https://www.hyauth.com",
+    github: undefined,
+    icon: "/icons/hyauth.png",
+    pinned: false,
+    deprecated: true,
+  },
+  {
+    name: "Delizioso",
+    description: "Run your restaurant on autopilot",
+    website: "https://delizioso.app",
+    github: undefined,
+    icon: "/icons/delizioso.png",
+    pinned: false,
   },
   {
     name: "diplate",
