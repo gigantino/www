@@ -76,6 +76,27 @@ body.blog-light {
   box-shadow: 1px 1px 0 theme(colors.gray.800);
 }
 
+@layer components {
+  .neo-button,
+  .neo-card-hover {
+    position: relative;
+  }
+}
+
+.neo-button:hover::after,
+.neo-card-hover:hover::after,
+.neo-button:active::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(var(--neo-border-width, 3px) * -1);
+  translate: 2px 2px;
+}
+
+.neo-button:active::after {
+  translate: -2px -2px;
+}
+
 .neo-link {
   text-decoration: underline;
   text-decoration-thickness: 2px;
