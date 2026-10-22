@@ -49,7 +49,7 @@ export function ProfilePicture({ size = "lg" }: { size?: "sm" | "lg" }) {
           filter={`url(#flower-shadow-${id})`}
         />
         <image
-          href="/favicon.ico"
+          href="/avatar.png"
           x="4"
           y="4"
           width="92"
