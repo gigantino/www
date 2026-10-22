@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { api } from "../convex/_generated/api";
@@ -34,8 +34,16 @@ type GuestbookData = {
 
 const defaultData: GuestbookData = { entries: [], page: 1, totalPages: 0, totalEntries: 0 };
 
+const OPEN_KEY = "guestbook-open";
+const subscribeNever = () => () => {};
+const readOpenedFromRedirect = () =>
+  new URLSearchParams(window.location.search).get("guestbook") === "1" ||
+  sessionStorage.getItem(OPEN_KEY) === "1";
+
 export function Guestbook({ initialData }: { initialData: GuestbookData | null }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const openedFromRedirect = useSyncExternalStore(subscribeNever, readOpenedFromRedirect, () => false);
+  const [openChoice, setOpenChoice] = useState<boolean | null>(null);
+  const isOpen = openChoice ?? openedFromRedirect;
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,11 +57,11 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
   const currentUser = useQuery(api.guestbook.currentUser);
   const myEntry = useQuery(api.guestbook.myEntry);
   const guestbookDataLive = useQuery(api.guestbook.list, { page, pageSize: 5 });
-  const prevDataRef = useRef<GuestbookData>(initialData ?? defaultData);
-  if (guestbookDataLive !== undefined) {
-    prevDataRef.current = guestbookDataLive;
+  const [lastData, setLastData] = useState<GuestbookData>(initialData ?? defaultData);
+  if (guestbookDataLive !== undefined && guestbookDataLive !== lastData) {
+    setLastData(guestbookDataLive);
   }
-  const guestbookData = guestbookDataLive ?? prevDataRef.current;
+  const guestbookData = guestbookDataLive ?? lastData;
   const sign = useMutation(api.guestbook.sign);
   const remove = useMutation(api.guestbook.remove);
 
@@ -62,34 +70,28 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("guestbook") === "1") {
-      sessionStorage.setItem("guestbook-open", "1");
-      setPage(1);
-      setIsOpen(true);
-      params.delete("guestbook");
-      const newUrl =
-        window.location.pathname +
-        (params.toString() ? `?${params}` : "") +
-        window.location.hash;
-      window.history.replaceState({}, "", newUrl);
-    } else if (sessionStorage.getItem("guestbook-open") === "1") {
-      setPage(1);
-      setIsOpen(true);
-    }
+    if (params.get("guestbook") !== "1") return;
+    sessionStorage.setItem(OPEN_KEY, "1");
+    params.delete("guestbook");
+    const newUrl =
+      window.location.pathname +
+      (params.toString() ? `?${params}` : "") +
+      window.location.hash;
+    window.history.replaceState({}, "", newUrl);
   }, []);
 
   useEffect(() => {
     const handleOpen = () => {
       setPage(1);
-      setIsOpen(true);
+      setOpenChoice(true);
     };
     window.addEventListener("open-guestbook", handleOpen);
     return () => window.removeEventListener("open-guestbook", handleOpen);
   }, []);
 
-  const initializedRef = useRef(false);
-  if (myEntry?.message && !initializedRef.current) {
-    initializedRef.current = true;
+  const [prefilled, setPrefilled] = useState(false);
+  if (myEntry?.message && !prefilled) {
+    setPrefilled(true);
     setMessage(myEntry.message);
   }
 
@@ -136,7 +138,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
     try {
       await remove();
       setMessage("");
-      initializedRef.current = false;
+      setPrefilled(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -150,8 +152,8 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
     <Modal
       isOpen={isOpen}
       onClose={() => {
-        sessionStorage.removeItem("guestbook-open");
-        setIsOpen(false);
+        sessionStorage.removeItem(OPEN_KEY);
+        setOpenChoice(false);
       }}
       title="Guestbook"
       icon={<BookOpen className="size-5" />}
