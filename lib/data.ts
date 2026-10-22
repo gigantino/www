@@ -73,6 +73,12 @@ export const externalWriting = [
 
 export const bookmarks = [
   {
+    title: "Neural Networks Are Already Clean",
+    url: "https://already-clean.goodfire.com/",
+    author: "Nick Cammarata",
+    date: "2026-10-15",
+  },
+  {
     title: "This Is Not The Computer For You",
     url: "https://samhenri.gold/blog/20260312-this-is-not-the-computer-for-you/",
     author: "Sam Henri Gold",
