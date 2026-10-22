@@ -46,34 +46,30 @@ export function Modal({
     if (!isOpen) return;
     const overlay = overlayRef.current;
     if (!overlay) return;
-    const blockBackgroundScroll = (e: Event) => {
+    const scrollsContent = (target: EventTarget | null) => {
       const content = contentRef.current;
-      const insideScrollable =
-        content &&
-        content.contains(e.target as Node) &&
-        content.scrollHeight > content.clientHeight;
-      if (!insideScrollable) e.preventDefault();
+      return (
+        !!content &&
+        content.contains(target as Node) &&
+        content.scrollHeight > content.clientHeight
+      );
+    };
+    const blockBackgroundScroll = (e: Event) => {
+      if (!scrollsContent(e.target)) e.preventDefault();
     };
     const blockBackgroundKeyScroll = (e: KeyboardEvent) => {
       if (!SCROLL_KEYS.has(e.key)) return;
       const target = e.target as HTMLElement;
       if (target.closest("input, textarea, select, [contenteditable]")) return;
       if (e.key === " " && target.closest("button, a")) return;
-      const content = contentRef.current;
-      const insideScrollable =
-        content &&
-        content.contains(target) &&
-        content.scrollHeight > content.clientHeight;
-      if (!insideScrollable) e.preventDefault();
+      blockBackgroundScroll(e);
     };
-    overlay.addEventListener("wheel", blockBackgroundScroll, { passive: false });
-    overlay.addEventListener("touchmove", blockBackgroundScroll, { passive: false });
-    overlay.addEventListener("keydown", blockBackgroundKeyScroll);
-    return () => {
-      overlay.removeEventListener("wheel", blockBackgroundScroll);
-      overlay.removeEventListener("touchmove", blockBackgroundScroll);
-      overlay.removeEventListener("keydown", blockBackgroundKeyScroll);
-    };
+    const listeners = new AbortController();
+    const { signal } = listeners;
+    overlay.addEventListener("wheel", blockBackgroundScroll, { passive: false, signal });
+    overlay.addEventListener("touchmove", blockBackgroundScroll, { passive: false, signal });
+    overlay.addEventListener("keydown", blockBackgroundKeyScroll, { signal });
+    return () => listeners.abort();
   }, [isOpen]);
 
   useEffect(() => {
