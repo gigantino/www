@@ -35,18 +35,18 @@ const Projects = dynamic(() =>
 const fixelText = localFont({
   variable: "--font-sans",
   src: [
-    { path: "./fonts/FixelText-Medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/FixelText-SemiBold.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/FixelText-Bold.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/FixelText-Medium.woff2", weight: "500" },
+    { path: "./fonts/FixelText-SemiBold.woff2", weight: "600" },
+    { path: "./fonts/FixelText-Bold.woff2", weight: "700" },
   ],
 });
 
 const fixelDisplay = localFont({
   variable: "--font-display",
   src: [
-    { path: "./fonts/FixelDisplay-SemiBold.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/FixelDisplay-Bold.woff2", weight: "700", style: "normal" },
-    { path: "./fonts/FixelDisplay-ExtraBold.woff2", weight: "800", style: "normal" },
+    { path: "./fonts/FixelDisplay-SemiBold.woff2", weight: "600" },
+    { path: "./fonts/FixelDisplay-Bold.woff2", weight: "700" },
+    { path: "./fonts/FixelDisplay-ExtraBold.woff2", weight: "800" },
   ],
 });
 

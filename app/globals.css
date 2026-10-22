@@ -4,7 +4,8 @@
 
 :root {
   color-scheme: light;
-  --neo-border: 3px solid theme(colors.gray.800);
+  --neo-border-width: 3px;
+  --neo-border: var(--neo-border-width) solid theme(colors.gray.800);
   --neo-shadow-offset: 4px;
   --neo-shadow: var(--neo-shadow-offset) var(--neo-shadow-offset) 0 theme(colors.gray.800);
   --neo-shadow-hover: 6px 6px 0 theme(colors.gray.800);
@@ -97,7 +98,7 @@ body.blog-light {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: calc(var(--neo-border-width, 3px) * -1);
+  inset: calc(var(--neo-border-width) * -1);
   translate: 2px 2px;
 }
 
