@@ -213,7 +213,6 @@ h3 {
   font-family: var(--font-display), var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Dark mode overrides for MDX prose content */
 .dark article h1 {
   color: theme(colors.gray.100);
 }
