@@ -8,14 +8,7 @@ import Image from "next/image";
 import { Modal } from "@/components/ui/Modal";
 import { PaginationControls } from "@/components/ui/PaginationControls";
 import { Github, Pencil, BookOpen, Trash2 } from "lucide-react";
-
-function formatDate(timestamp: number) {
-  return new Date(timestamp).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+import { formatDate } from "@/lib/format";
 
 function isAccountOldEnough(githubCreatedAt: string | undefined): boolean {
   if (!githubCreatedAt) return false;

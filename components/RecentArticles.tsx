@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { blogPosts } from "@/lib/data";
+import { formatDate } from "@/lib/format";
 
 export function RecentArticles() {
   const pathname = usePathname();
@@ -22,11 +23,7 @@ export function RecentArticles() {
                 {post.title}
               </span>
               <time className="text-sm text-gray-500 dark:text-gray-400">
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                {formatDate(post.date)}
               </time>
             </a>
           </li>

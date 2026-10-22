@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { blogPosts } from "@/lib/data";
+import { formatDate } from "@/lib/format";
 
 const tagColors = [
   "bg-yellow-100 dark:bg-yellow-900/50",
@@ -35,11 +36,7 @@ export function ArticleMeta() {
       ))}
       {showDate && (
         <time className="text-sm text-gray-800/60 dark:text-gray-400">
-          {new Date(post.date).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
+          {formatDate(post.date)}
         </time>
       )}
     </div>
