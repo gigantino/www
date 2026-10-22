@@ -17,8 +17,8 @@ export default async function Home() {
     <HomeShell>
       <main className="mx-auto grid max-w-2xl gap-4">
         <Bio initialGuestbookCount={guestbookCount} />
-        <Writing />
         <Bookmarks />
+        <Writing />
         <Newsletter />
       </main>
     </HomeShell>
