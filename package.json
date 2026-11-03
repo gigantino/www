@@ -28,7 +28,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "shiki": "^3.23.0",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "1.20.13",
@@ -40,7 +40,7 @@
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
-    "wrangler": "^4.152.0"
+    "wrangler": "^4.157.0"
   },
   "ignoreScripts": [
     "sharp",
