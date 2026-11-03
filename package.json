@@ -49,5 +49,8 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "overrides": {
+    "glob": "^14.0.3"
+  }
 }
