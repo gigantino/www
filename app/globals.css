@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
   color-scheme: light;
   --neo-border-width: 3px;
@@ -10,17 +8,10 @@
   --neo-shadow: var(--neo-shadow-offset) var(--neo-shadow-offset) 0 theme(colors.gray.800);
   --neo-shadow-hover: 6px 6px 0 theme(colors.gray.800);
   --neo-radius: 12px;
-  --neo-focus-gap: 10px;
 
-  --neo-cream: theme(colors.yellow.50);
   --background: theme(colors.yellow.50);
   --foreground: theme(colors.gray.800);
-}
-
-.dark {
-  color-scheme: dark;
-  --background: theme(colors.gray.950);
-  --foreground: theme(colors.gray.100);
+  --star-color: color-mix(in srgb, theme(colors.gray.800) 6%, transparent);
 }
 
 @theme inline {
@@ -44,8 +35,20 @@ body {
   }
 }
 
-body.blog-dark {
-  background: #0a0a0a;
+.star-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.star-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--star-color);
+  -webkit-mask: url("/star-pattern.svg") 0 0 / 560px 560px repeat;
+  mask: url("/star-pattern.svg") 0 0 / 560px 560px repeat;
 }
 
 body.blog-light {
@@ -57,11 +60,6 @@ body.blog-light {
   border-radius: var(--neo-radius);
   box-shadow: var(--neo-shadow);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.neo-card-hover:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--neo-shadow-hover);
 }
 
 .neo-button {
@@ -85,44 +83,23 @@ body.blog-light {
   box-shadow: 1px 1px 0 theme(colors.gray.800);
 }
 
-@layer components {
-  .neo-button,
-  .neo-card-hover {
-    position: relative;
-  }
+.neo-link,
+.neo-link-hover {
+  text-decoration: none;
+  background-image: var(
+    --hand-underline,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1,5.6C20,4.6 40,5.4 60,4.9C75,4.6 88,5.3 98.5,4.6' fill='none' stroke='%231f2937' stroke-width='1.8' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+  );
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 0.6em;
+  padding-bottom: 0.45em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
-.neo-button:hover::after,
-.neo-card-hover:hover::after,
-.neo-button:active::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: calc(var(--neo-border-width) * -1);
-  translate: 2px 2px;
-}
-
-.neo-button:active::after {
-  translate: -2px -2px;
-}
-
-.neo-link {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s ease;
-}
-
-.neo-link:hover {
-  text-decoration-color: theme(colors.gray.800);
-}
-
-.dark .neo-link {
-  color: theme(colors.gray.300);
-}
-
-.dark .neo-link:hover {
-  color: theme(colors.gray.100);
+.neo-link-hover:not(:hover) {
+  background-image: none;
 }
 
 @supports (-webkit-touch-callout: none) {
@@ -142,20 +119,11 @@ body.blog-light {
   outline-offset: 3px;
 }
 
-.dark *:focus-visible {
-  outline-color: theme(colors.gray.400) !important;
-}
-
 .neo-button:focus-visible,
 .neo-card:focus-visible {
   outline: none !important;
   transform: translate(-2px, -2px);
   box-shadow: var(--neo-shadow-hover);
-}
-
-.dark .neo-button:focus-visible,
-.dark .neo-card:focus-visible {
-  box-shadow: 6px 6px 0 theme(colors.gray.700);
 }
 
 @keyframes modal-backdrop-in {
@@ -213,58 +181,6 @@ h3 {
   font-family: var(--font-display), var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
-.dark article h1 {
-  color: theme(colors.gray.100);
-}
-
-.dark article h2 {
-  color: theme(colors.gray.200);
-}
-
-.dark article h3 {
-  color: theme(colors.gray.300);
-}
-
-.dark article p,
-.dark article li {
-  color: theme(colors.gray.300);
-}
-
-.dark article ul,
-.dark article ol {
-  color: theme(colors.gray.300);
-}
-
-.dark article a {
-  color: theme(colors.gray.400);
-}
-
-.dark article a:hover {
-  color: theme(colors.gray.200);
-}
-
-.dark article blockquote {
-  border-color: theme(colors.gray.600);
-  color: theme(colors.gray.400);
-}
-
-.dark article code {
-  background: theme(colors.gray.800);
-  color: theme(colors.gray.300);
-}
-
-.dark article strong {
-  color: theme(colors.gray.200);
-}
-
-.dark article em {
-  color: inherit;
-}
-
-.dark article img {
-  opacity: 0.9;
-}
-
 .guestbook-avatar {
   background: repeating-linear-gradient(
     135deg,
@@ -273,40 +189,67 @@ h3 {
   );
 }
 
-.dark .guestbook-avatar {
-  background: repeating-linear-gradient(
-    135deg,
-    var(--color-gray-600) 0 3px,
-    var(--color-gray-800) 3px 6px
-  );
+:is(.neo-card, .neo-button, .hand-tag) {
+  isolation: isolate;
 }
 
-/* Dark mode SVG shadow override for profile picture flower */
-.dark [id^="flower-shadow"] feDropShadow {
-  flood-color: theme(colors.gray.700);
+:is(.neo-card, .neo-button, .hand-tag):not(.absolute):not(.fixed):not(.sticky) {
+  position: relative;
 }
 
-/* Dark mode overrides for neo-card/neo-button inside blog */
-.dark .neo-card {
-  border-color: theme(colors.gray.600);
-  box-shadow: 4px 4px 0 theme(colors.gray.700);
+:is(.neo-card, .neo-button, .hand-tag)::before,
+:is(.neo-card, .neo-button, .hand-tag)::after {
+  content: "";
+  position: absolute;
+  inset: var(--hf-inset, 0);
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
-.dark .neo-button {
-  border-color: theme(colors.gray.600);
-  box-shadow: 4px 4px 0 theme(colors.gray.700);
-  background: theme(colors.gray.700);
-  color: theme(colors.gray.200);
+:is(.neo-card, .neo-button, .hand-tag)::before {
+  z-index: -1;
+  background-image: var(--hf-frame, none);
 }
 
-.dark .neo-card-hover:hover {
-  box-shadow: 6px 6px 0 theme(colors.gray.700);
+:is(.neo-card, .neo-button, .hand-tag)::after {
+  z-index: -2;
+  background-image: var(--hf-shade, none);
+  background-position: var(--hf-shift, 4px) var(--hf-shift, 4px);
+  mask-image: linear-gradient(#000 0 0), var(--hf-shade, none);
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  mask-composite: exclude;
 }
 
-.dark .neo-button:hover {
-  box-shadow: 6px 6px 0 theme(colors.gray.700);
+.neo-card {
+  --hf-fill-opacity: 0.66;
 }
 
-.dark .neo-button:active {
-  box-shadow: 1px 1px 0 theme(colors.gray.700);
+.modal-panel {
+  --hf-fill-opacity: 1;
 }
+
+.neo-button::after {
+  transition: background-position 0.1s ease;
+}
+
+.neo-button:hover::after,
+.neo-button:focus-visible::after {
+  --hf-shift: 6px;
+}
+
+.neo-button:active::after {
+  --hf-shift: 1px;
+}
+
+:is(input, textarea, select).neo-card {
+  background-position: var(--hf-lift, 0px) var(--hf-lift, 0px), 0 0;
+  transition: background-position 0.1s ease;
+}
+
+:is(input, textarea, select).neo-card:is(:hover, :focus) {
+  --hf-lift: -2px;
+  transform: none;
+}
+

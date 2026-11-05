@@ -53,15 +53,15 @@ export function CoralModels() {
       {families.map((family) => (
         <section
           key={family.name}
-          className="neo-card flex flex-col gap-3 bg-white p-4 dark:bg-gray-800"
+          className="neo-card flex flex-col gap-3 bg-white p-4"
         >
           <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-            <h3 className="text-lg font-bold dark:text-gray-100">{family.name}</h3>
+            <h3 className="text-lg font-bold">{family.name}</h3>
             <a
               href={family.baseUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="neo-link text-sm text-gray-600 dark:text-gray-400"
+              className="neo-link text-sm text-gray-600"
             >
               Base: {family.base}
             </a>
@@ -75,8 +75,8 @@ export function CoralModels() {
                   rel="noopener noreferrer"
                   className="group flex items-center justify-between gap-3 text-sm"
                 >
-                  <span className="neo-link flex min-w-0 items-center gap-1 font-mono text-gray-800 dark:text-gray-200">
-                    <span className="truncate">{model.id}</span>
+                  <span className="flex min-w-0 items-center gap-1 font-mono text-gray-800">
+                    <span className="truncate"><span className="neo-link">{model.id}</span></span>
                     <ExternalLink size={12} className="shrink-0" />
                   </span>
                   <time className="shrink-0 text-gray-500">{formatDate(model.date)}</time>

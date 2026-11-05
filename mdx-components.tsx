@@ -48,7 +48,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     a: ({ href, children }) => (
       <a
         href={href}
-        className="text-gray-500 underline underline-offset-3 transition-colors hover:text-gray-900"
+        className="neo-link text-gray-500 transition-colors hover:text-gray-900"
         target={href?.startsWith("http") ? "_blank" : undefined}
         rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
       >

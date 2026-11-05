@@ -1,8 +1,5 @@
 export const personalInfo = {
   name: "gigantino",
-  title: "Full-stack developer",
-  location: "Geneva, Switzerland",
-  experience: "5+ years",
   bio: "I'm a full-stack developer with over 5 years of experience under my belt, currently based in Geneva, Switzerland.",
 };
 
@@ -17,9 +14,24 @@ export const socialLinks = [
     url: "mailto:hello@ggtn.ch",
     icon: "email",
   },
-];
+  {
+    name: "X.com",
+    url: "https://x.com/ggtnch",
+    icon: "x",
+  },
+] as const;
 
-export const blogPosts = [
+export type BlogPost = {
+  title: string;
+  description: string;
+  date: string;
+  url: string;
+  tags: string[];
+  image?: string;
+  wip?: boolean;
+};
+
+export const blogPosts: BlogPost[] = [
   {
     title: "How We Broke McDonald's Italy From the Inside Out",
     description:
@@ -64,13 +76,6 @@ export const blogPosts = [
   },
 ];
 
-export const externalWriting = [
-  {
-    title: "How we hacked a billion-dollar company for unlimited snacks",
-    url: "https://derewah.dev/projects/food-heist",
-  },
-];
-
 export const bookmarks = [
   {
     title: "Neural Networks Are Already Clean",
@@ -90,7 +95,6 @@ export const newsletter = {
   description:
     "Get updates on new projects and articles.",
 };
-
 
 type Project = {
   name: string;
@@ -140,7 +144,7 @@ export const projects: Project[] = [
   {
     name: "HyAuth",
     description: "The OAuth2 API to authenticate Hytale players",
-    website: "https://www.hyauth.com",
+    website: "https://hyauth.ggtn.ch",
     github: undefined,
     icon: "/icons/hyauth.png",
     pinned: false,

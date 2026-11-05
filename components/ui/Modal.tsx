@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useCallback, type ReactNode } from "react";
+import { CloseDoodle } from "@/components/icons";
+import { HandText } from "@/components/HandText";
 
 const WHITESPACE_RE = /\s+/g;
 const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
@@ -10,7 +12,6 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   icon?: ReactNode;
-  size?: "md" | "lg";
   className?: string;
   children: ReactNode;
 }
@@ -20,7 +21,6 @@ export function Modal({
   onClose,
   title,
   icon,
-  size = "lg",
   className = "",
   children,
 }: ModalProps) {
@@ -28,8 +28,6 @@ export function Modal({
   const modalRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-
-  const sizeClass = size === "md" ? "sm:max-w-lg" : "sm:max-w-[45rem]";
 
   useEffect(() => {
     if (!isOpen) return;
@@ -135,19 +133,20 @@ export function Modal({
       <div
         ref={modalRef}
         tabIndex={-1}
-        className={`modal-panel neo-card relative flex h-full w-full flex-col outline-none max-sm:rounded-none max-sm:border-0 max-sm:shadow-none ${sizeClass} sm:h-auto sm:max-h-[85vh] sm:mx-4 ${className}`}
+        className={`modal-panel neo-card relative flex h-full w-full flex-col outline-none max-sm:rounded-none max-sm:border-0 max-sm:shadow-none sm:max-w-[45rem] sm:h-auto sm:max-h-[85vh] sm:mx-4 ${className}`}
       >
-        <div className="flex shrink-0 items-center justify-between border-b-3 border-gray-800 dark:border-gray-600 px-6 py-4">
-          <h2 id={titleId} className="text-xl font-bold flex items-center gap-2 dark:text-gray-100">
+        <div className="flex shrink-0 items-center justify-between border-b-3 border-gray-800 px-6 py-4">
+          <h2 id={titleId} className="text-xl font-bold flex items-center gap-2">
             {icon}
-            {title}
+            <HandText text={title} />
           </h2>
           <button
             onClick={onClose}
-            className="neo-button bg-white dark:bg-gray-700 dark:text-gray-200 text-sm flex items-center gap-1"
+            className="neo-button bg-white text-sm flex items-center gap-1"
             aria-label="Close"
           >
-            ✕ Close
+            <CloseDoodle size={12} />
+            Close
           </button>
         </div>
 

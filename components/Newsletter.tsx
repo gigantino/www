@@ -1,10 +1,12 @@
 "use client";
 
 import { newsletter } from "@/lib/data";
+import { SendDoodle, MailDoodle } from "@/components/icons";
 import { subscribeResponseSchema } from "@/lib/schemas/newsletter";
-import { BentoCard } from "./ui/BentoCard";
+import { BentoCard } from "@/components/ui/BentoCard";
 import { useEffect, useState } from "react";
-import { CircleCheck, CircleAlert, Send, Mail } from "lucide-react";
+import { CircleCheck, CircleAlert } from "lucide-react";
+import { HandText } from "@/components/HandText";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
@@ -40,15 +42,15 @@ export function Newsletter() {
   }
 
   return (
-    <BentoCard id="newsletter" className="flex flex-col gap-4 bg-amber-100 dark:bg-gray-800">
-      <h2 className="text-xl font-bold flex items-center gap-2 dark:text-gray-100"><Mail className="size-5" /> Newsletter</h2>
-      <p className="text-base dark:text-gray-300">{newsletter.description}</p>
+    <BentoCard id="newsletter" className="flex flex-col gap-4 bg-amber-100">
+      <h2 className="text-xl font-bold flex items-center gap-2"><MailDoodle size={20} /> <HandText text="Newsletter" /></h2>
+      <p className="text-base">{newsletter.description}</p>
       {message ? (
-        <div className={`neo-card px-3 py-2 text-sm flex items-center gap-2 ${message.success ? "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300" : "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300"}`}>
+        <div className={`neo-card px-3 py-2 text-sm flex items-center gap-2 ${message.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
           {message.success ? <CircleCheck className="size-4 shrink-0" /> : <CircleAlert className="size-4 shrink-0" />}
           <span className="flex-1">{message.text}</span>
           {!message.success && (
-            <button onClick={() => setMessage(null)} className="shrink-0 font-bold text-sm underline dark:text-red-300">
+            <button onClick={() => setMessage(null)} className="neo-link shrink-0 font-bold text-sm">
               Try again
             </button>
           )}
@@ -61,14 +63,14 @@ export function Newsletter() {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
             required
-            className="neo-card min-w-0 flex-1 bg-emerald-100 px-3 py-2 text-base outline-none dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
+            className="neo-card min-w-0 flex-1 bg-emerald-100 px-3 py-2 text-base outline-none"
           />
           <button
             type="submit"
             disabled={loading}
-            className="neo-button shrink-0 bg-yellow-100 text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 dark:bg-gray-600 dark:text-gray-100"
+            className="neo-button shrink-0 bg-yellow-100 text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
           >
-            <Send className="size-4" /> Subscribe
+            <SendDoodle size={16} /> Subscribe
           </button>
         </form>
       )}

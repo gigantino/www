@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import { GithubDoodle, HeartDoodle } from "@/components/icons";
 import { useQuery, useMutation, useConvexAuth } from "convex/react";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { api } from "../convex/_generated/api";
-import Image from "next/image";
+import { api } from "@/convex/_generated/api";
+import { HandAvatar } from "@/components/HandAvatar";
 import { Modal } from "@/components/ui/Modal";
 import { PaginationControls } from "@/components/ui/PaginationControls";
-import { Github, Pencil, BookOpen, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 
 function isAccountOldEnough(githubCreatedAt: string | undefined): boolean {
@@ -156,17 +157,17 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
         setOpenChoice(false);
       }}
       title="Guestbook"
-      icon={<BookOpen className="size-5" />}
-      className="bg-amber-100 dark:bg-gray-800"
+      icon={<HeartDoodle size={18} />}
+      className="bg-amber-100"
     >
       {isAuthLoading || (isAuthenticated && !currentUser) ? (
-        <div className="text-sm text-gray-500 dark:text-gray-400">Loading...</div>
+        <div className="text-sm text-gray-500">Loading...</div>
       ) : !isAuthenticated ? (
         <button
           onClick={handleSignIn}
           className="neo-button !bg-gray-800 !text-white text-sm flex w-full items-center justify-center gap-2"
         >
-          <Github size={16} />
+          <GithubDoodle size={16} />
           Sign in with GitHub
         </button>
       ) : currentUser ? (
@@ -174,20 +175,19 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               {currentUser.image && (
-                <Image
+                <HandAvatar
                   src={currentUser.image}
                   alt={currentUser.name ?? "User"}
-                  width={32}
-                  height={32}
-                  className="rounded-full border-2 border-gray-800"
+                  size={32}
+                  id={currentUser.githubUsername ?? currentUser.image}
                 />
               )}
               <div>
-                <span className="text-sm font-medium dark:text-gray-100">
+                <span className="text-sm font-medium">
                   {currentUser.name}
                 </span>
                 {currentUser.githubUsername && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                  <span className="text-xs text-gray-500 ml-1">
                     @{currentUser.githubUsername}
                   </span>
                 )}
@@ -195,7 +195,7 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
             </div>
             <button
               onClick={handleSignOut}
-              className="shrink-0 text-xs text-gray-500 dark:text-gray-400 underline hover:text-gray-700 dark:hover:text-gray-200"
+              className="neo-link shrink-0 text-xs text-gray-500 hover:text-gray-700"
             >
               Sign out
             </button>
@@ -221,14 +221,14 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
                   placeholder="Leave a message..."
                   rows={3}
                   required
-                  className="neo-card w-full resize-none bg-white dark:bg-gray-700 dark:text-gray-100 px-3 py-2 text-sm outline-none"
+                  className="neo-card w-full resize-none bg-white px-3 py-2 text-sm outline-none"
                 />
-                <span className="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-500">
+                <span className="absolute bottom-2 right-3 text-xs text-gray-400">
                   {message.length}/200
                 </span>
               </div>
               {error && (
-                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                <p className="text-sm text-red-600">{error}</p>
               )}
               <div className="flex items-center gap-2">
                 <button
@@ -266,44 +266,36 @@ export function Guestbook({ initialData }: { initialData: GuestbookData | null }
 
       <div ref={entriesRef} className="flex flex-col gap-3 pt-4">
         {guestbookData.entries.length === 0 ? (
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-sm text-gray-500">
             No entries yet. Be the first to sign!
           </div>
         ) : (
           <>
             {guestbookData.entries.map((entry) => (
-              <div key={entry._id} className="neo-card bg-white dark:bg-gray-700 p-3">
+              <div key={entry._id} className="neo-card bg-white p-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     {entry.image && (
-                      <span className="guestbook-avatar size-6 shrink-0 overflow-hidden rounded-full border-2 border-gray-800 dark:border-gray-600">
-                        <Image
-                          src={entry.image}
-                          alt={entry.name}
-                          width={24}
-                          height={24}
-                          className="block size-full object-cover"
-                        />
-                      </span>
+                      <HandAvatar src={entry.image} alt={entry.name} size={24} id={entry._id} />
                     )}
                     {entry.githubUsername ? (
                       <a
                         href={`https://github.com/${entry.githubUsername}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-sm hover:underline dark:text-gray-100"
+                        className="neo-link-hover font-medium text-sm"
                       >
                         {entry.name}
                       </a>
                     ) : (
-                      <span className="font-medium text-sm dark:text-gray-100">{entry.name}</span>
+                      <span className="font-medium text-sm">{entry.name}</span>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
                     {formatDate(entry._creationTime)}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{entry.message}</p>
+                <p className="mt-1 text-sm text-gray-700">{entry.message}</p>
               </div>
             ))}
             {guestbookData.totalPages > 1 && (

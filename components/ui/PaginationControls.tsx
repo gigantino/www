@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeftDoodle, ChevronRightDoodle } from "@/components/icons";
 
 interface PaginationControlsProps {
   page: number;
@@ -14,27 +14,27 @@ export function PaginationControls({
   onPageChange,
 }: PaginationControlsProps) {
   return (
-    <div className="flex items-center justify-center gap-3 pt-2">
+    <div className="flex items-center justify-center gap-1 pt-2">
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
-        className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="flex size-10 cursor-pointer items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-800/5 hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
         aria-label="Previous page"
       >
-        <ChevronLeft size={18} />
+        <ChevronLeftDoodle size={16} />
       </button>
 
-      <span className="text-sm text-gray-500 dark:text-gray-400">
+      <span className="text-sm text-gray-500">
         {page} / {totalPages}
       </span>
 
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
-        className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="flex size-10 cursor-pointer items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-800/5 hover:text-gray-800 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
         aria-label="Next page"
       >
-        <ChevronRight size={18} />
+        <ChevronRightDoodle size={16} />
       </button>
     </div>
   );

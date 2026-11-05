@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { FolderDoodle, GithubDoodle } from "@/components/icons";
 import { projects } from "@/lib/data";
 import { Modal } from "@/components/ui/Modal";
-import { Pin, Globe, Github, FolderOpen } from "lucide-react";
+import { Pin, Globe } from "lucide-react";
 
 function ProjectLinks({
   website,
@@ -21,10 +22,10 @@ function ProjectLinks({
           href={website}
           target="_blank"
           rel="noopener noreferrer"
-          className="neo-link flex items-center gap-1 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+          className="flex items-center gap-1 text-gray-600 hover:text-gray-800"
         >
           <Globe size={14} />
-          Website
+          <span className="neo-link">Website</span>
         </a>
       )}
       {github && (
@@ -32,10 +33,10 @@ function ProjectLinks({
           href={github}
           target="_blank"
           rel="noopener noreferrer"
-          className="neo-link flex items-center gap-1 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+          className="flex items-center gap-1 text-gray-600 hover:text-gray-800"
         >
-          <Github size={14} />
-          GitHub
+          <GithubDoodle size={14} />
+          <span className="neo-link">GitHub</span>
         </a>
       )}
     </div>
@@ -46,13 +47,13 @@ function BuiltWithBrother({ github }: { github?: string }) {
   if (!github) return null;
 
   return (
-    <p className="text-sm text-gray-600 dark:text-gray-300">
+    <p className="text-sm text-gray-600">
       Working on it with my brother{" "}
       <a
         href={`https://github.com/${github}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="neo-link font-medium text-gray-800 dark:text-gray-100"
+        className="neo-link font-medium text-gray-800"
       >
         @{github}
       </a>
@@ -62,7 +63,7 @@ function BuiltWithBrother({ github }: { github?: string }) {
 
 function DeprecatedBadge() {
   return (
-    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/40 dark:text-amber-200">
+    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
       Deprecated
     </span>
   );
@@ -85,14 +86,14 @@ export function Projects() {
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       title="Projects"
-      icon={<FolderOpen className="size-5" />}
-      className="bg-green-100 dark:bg-gray-800"
+      icon={<FolderDoodle size={18} />}
+      className="bg-green-100"
     >
       <ul className="flex flex-col gap-4">
         {pinnedProjects.map((project) => (
           <li
             key={project.name}
-            className="neo-card flex flex-col gap-1 bg-white dark:bg-gray-700 p-4"
+            className="neo-card flex flex-col gap-1 bg-white p-4"
           >
             <div className="flex items-center gap-2">
               {project.icon && (
@@ -104,11 +105,11 @@ export function Projects() {
                   className="size-6 rounded-full"
                 />
               )}
-              <h3 className="font-bold dark:text-gray-100">{project.name}</h3>
+              <h3 className="font-bold">{project.name}</h3>
               {project.deprecated && <DeprecatedBadge />}
               <Pin size={14} className="inline-block text-gray-400" />
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
+            <p className="text-sm text-gray-600">{project.description}</p>
             <BuiltWithBrother github={project.brother} />
             <ProjectLinks website={project.website} github={project.github} />
           </li>
@@ -120,10 +121,10 @@ export function Projects() {
           {nonPinnedProjects.map((project) => (
             <li key={project.name} className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-medium dark:text-gray-100">{project.name}</h3>
+                <h3 className="font-medium">{project.name}</h3>
                 {project.deprecated && <DeprecatedBadge />}
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{project.description}</p>
+              <p className="text-sm text-gray-600">{project.description}</p>
               <BuiltWithBrother github={project.brother} />
               <ProjectLinks
                 website={project.website}

@@ -1,29 +1,18 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
-import { cookies } from "next/headers";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { PostHogProvider } from "./PostHogProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { handRuntimeScript } from "@/lib/handRuntime";
+import { HandCommit } from "@/components/HandCommit";
+import { HandSeedProvider } from "@/components/HandSeed";
+import { createHandSeed } from "@/lib/handFrame";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
 import { publicEnv } from "@/lib/env.public";
-import { isTheme } from "@/lib/theme";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-
-const themeScript = `
-(function(){
-  try {
-    var t = document.cookie.match(/(?:^|; )theme=(light|dark)/);
-    var dark = (t && t[1]==='dark') || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
-    var el = document.documentElement;
-    el.classList.toggle('dark', dark);
-    el.style.colorScheme = dark ? 'dark' : 'light';
-  } catch(e){}
-})();
-`;
 
 const Guestbook = dynamic(() =>
   import("@/components/Guestbook").then((m) => m.Guestbook)
@@ -98,20 +87,15 @@ async function GuestbookLoader() {
   return <Guestbook initialData={data} />;
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const themeCookie = cookieStore.get("theme")?.value;
-  const initialTheme = isTheme(themeCookie) ? themeCookie : "device";
+  const handSeed = createHandSeed();
 
   return (
-    <html lang="en" className={initialTheme === "dark" ? "dark" : undefined} style={{ colorScheme: initialTheme === "dark" ? "dark" : "light" }} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
+    <html lang="en">
       <body
         className={`${fixelText.variable} ${fixelDisplay.variable} ${geistMono.variable} antialiased`}
       >
@@ -135,15 +119,17 @@ export default async function RootLayout({
         />
         <PostHogProvider>
           <ConvexClientProvider>
-            <ThemeProvider initialTheme={initialTheme}>
+            <HandSeedProvider seed={handSeed}>
               {children}
               <Suspense fallback={null}>
                 <GuestbookLoader />
               </Suspense>
               <Projects />
-            </ThemeProvider>
+              <HandCommit />
+            </HandSeedProvider>
           </ConvexClientProvider>
         </PostHogProvider>
+        <script dangerouslySetInnerHTML={{ __html: handRuntimeScript }} />
       </body>
     </html>
   );

@@ -5,19 +5,17 @@ const SITE_URL = serverEnv.SITE_URL;
 
 export function GET() {
   const items = blogPosts
-    .reduce<string[]>((acc, post) => {
-      if (!post.wip) {
-        const url = `${SITE_URL}${post.url}`;
-        acc.push(`    <item>
+    .filter((post) => !post.wip)
+    .map((post) => {
+      const url = `${SITE_URL}${post.url}`;
+      return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${url}</link>
       <guid>${url}</guid>
       <description>${escapeXml(post.description)}</description>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-    </item>`);
-      }
-      return acc;
-    }, [])
+    </item>`;
+    })
     .join("\n");
 
   const feed = `<?xml version="1.0" encoding="UTF-8"?>

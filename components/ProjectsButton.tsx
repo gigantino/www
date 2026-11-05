@@ -1,12 +1,8 @@
 "use client";
 
-import { FolderOpen } from "lucide-react";
+import { FolderDoodle } from "@/components/icons";
 
-interface ProjectsButtonProps {
-  className?: string;
-}
-
-export function ProjectsButton({ className = "" }: ProjectsButtonProps) {
+export function ProjectsButton() {
   const handleClick = () => {
     window.dispatchEvent(new CustomEvent("open-projects"));
   };
@@ -14,9 +10,9 @@ export function ProjectsButton({ className = "" }: ProjectsButtonProps) {
   return (
     <button
       onClick={handleClick}
-      className={`neo-button flex items-center gap-2 bg-green-100 dark:bg-green-900/40 dark:text-gray-100 px-4 py-2 font-medium ${className}`}
+      className={`neo-button flex items-center gap-2 bg-green-100 px-4 py-2 font-medium`}
     >
-      <FolderOpen size={18} />
+      <FolderDoodle size={16} />
       Projects
     </button>
   );
